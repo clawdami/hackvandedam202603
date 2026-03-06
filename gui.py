@@ -97,251 +97,365 @@ LUNCH_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🥙 THE MEATBALL</title>
+<title>🍝 THE MEATBALL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-  :root{--bg:#1A2A1A;--bg-card:#243524;--green:#4CAF50;--lime:#8BC34A;--yellow:#FFC107;--red:#F44336;--cream:#F5F0E8;--muted:#8A9E8A;--border:#3A5A3A;--sauce:#C0392B;--gold:#FFD700;--purple:#9B59B6;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--cream);font-family:'Courier Prime','Courier New',monospace;min-height:100vh;padding-bottom:40px;}
-  header{background:#2D4A2D;border-bottom:2px solid var(--green);padding:14px 20px;display:flex;align-items:center;gap:16px;}
-  header h1{font-size:1.4rem;color:var(--lime);}
-  header p{font-size:0.72rem;color:var(--muted);margin-top:2px;}
-  .nav-link{margin-left:auto;color:var(--muted);text-decoration:none;font-size:0.82rem;border:1px solid var(--border);padding:5px 10px;border-radius:4px;}
-  .nav-link:hover{color:var(--lime);border-color:var(--lime);}
-  .grid{display:grid;gap:12px;padding:12px 14px;max-width:1100px;margin:0 auto;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));}
-  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
-  .card.wide{grid-column:span 2;}
-  .card-header{background:#2D4A2D;padding:9px 13px;font-size:0.88rem;font-weight:bold;color:var(--lime);display:flex;align-items:center;gap:8px;}
-  .card-body{padding:13px;}
-  .big-num{text-align:center;font-size:3rem;font-weight:bold;color:var(--lime);margin:8px 0 2px;}
-  .sub{text-align:center;font-size:0.76rem;color:var(--muted);margin-bottom:12px;}
-  .btn-row{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;}
-  .btn{background:#2D4A2D;border:1px solid var(--border);border-radius:4px;color:var(--cream);cursor:pointer;font-family:inherit;font-size:0.88rem;padding:7px 12px;transition:background .15s;}
-  .btn:hover{background:var(--green);color:#000;}
-  .btn.ok{background:var(--green);color:#000;font-weight:bold;}
-  .btn.ok:hover{background:var(--lime);}
-  .btn.bad{background:var(--sauce);color:var(--cream);}
-  .btn.bad:hover{background:#e74c3c;}
-  .btn.gold{background:var(--gold);color:#000;font-weight:bold;}
-  .btn.purple{background:var(--purple);color:#fff;font-weight:bold;}
-  /* Agenda */
-  .agenda-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-top:6px;}
-  .agenda-table th{color:var(--muted);padding:4px 6px;text-align:center;border-bottom:1px solid var(--border);}
-  .agenda-table td{padding:5px 6px;text-align:center;border-bottom:1px solid #1A2A1A;}
-  .agenda-table td:first-child{text-align:left;color:var(--cream);font-weight:bold;}
-  .day-check{cursor:pointer;font-size:1.1rem;}
-  .today-col{background:rgba(139,195,74,0.1);}
-  /* Budget */
-  .brow{display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.84rem;}
-  .bar-bg{width:100%;height:11px;background:#1A2A1A;border-radius:5px;overflow:hidden;margin-bottom:7px;}
-  .bar{height:100%;border-radius:5px;transition:width .4s;}
-  .spaarball{background:#1A2A1A;border-radius:6px;padding:10px 12px;margin-top:8px;text-align:center;}
-  .spaarball .euro{font-size:2rem;color:var(--gold);}
-  /* Inventory */
-  .inv-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
-  .inv-item:last-child{border-bottom:none;}
-  .inv-emoji{font-size:1.1rem;width:26px;text-align:center;}
-  .inv-name{flex:1;}
-  .inv-qty{font-weight:bold;min-width:36px;text-align:right;}
-  .inv-unit{color:var(--muted);font-size:0.72rem;min-width:26px;}
-  .inv-low{color:var(--red);}
-  .inv-ok{color:var(--green);}
-  /* Picnic */
-  .picnic-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
-  .picnic-item:last-child{border-bottom:none;}
-  /* Poll */
-  .poll-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;cursor:pointer;transition:background .12s;}
-  .poll-item:hover{background:#1A2A1A;border-radius:4px;padding-left:4px;}
-  .poll-item:last-child{border-bottom:none;}
-  .poll-bar-bg{flex:1;height:8px;background:#1A2A1A;border-radius:4px;overflow:hidden;}
-  .poll-bar{height:100%;background:var(--green);border-radius:4px;transition:width .4s;}
-  .poll-votes{font-size:0.72rem;color:var(--muted);min-width:28px;text-align:right;}
-  /* Training */
-  .tip-card{background:#1A2A1A;border-radius:5px;padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:background .14s;display:flex;align-items:flex-start;gap:8px;}
-  .tip-card:hover{background:#2D4A2D;}
-  /* Product Requests */
-  .req-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
-  .req-item:last-child{border-bottom:none;}
-  .req-status{font-size:0.7rem;margin-left:auto;white-space:nowrap;}
-  /* Mood */
-  .mood-btn{font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:4px;border:2px solid transparent;transition:border-color .15s;}
-  .mood-btn:hover,.mood-btn.active{border-color:var(--lime);}
-  .mood-avg{text-align:center;font-size:2.5rem;margin:8px 0 4px;}
-  /* Oracle */
-  .oracle-box{background:#1A2A1A;border-radius:8px;padding:14px;text-align:center;margin-top:10px;min-height:60px;}
-  .oracle-ritual{font-size:0.75rem;color:var(--muted);font-style:italic;margin-bottom:6px;}
-  .oracle-msg{font-size:0.9rem;color:var(--purple);font-weight:bold;}
-  /* Slot machine */
-  .reels{display:flex;justify-content:center;gap:12px;font-size:3rem;margin:10px 0;background:#1A2A1A;padding:12px;border-radius:8px;}
-  .reel{transition:transform .3s;}
-  .spin-result{text-align:center;font-size:0.88rem;color:var(--yellow);font-weight:bold;min-height:20px;}
-  /* Complaints */
-  .complaint-item{padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
-  .complaint-item:last-child{border-bottom:none;}
-  .complaint-response{font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:3px;}
-  /* Leaderboard */
-  .lb-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
-  .lb-item:last-child{border-bottom:none;}
-  .lb-rank{font-size:1.2rem;width:28px;}
-  /* Input */
-  .inp{background:#1A2A1A;border:1px solid var(--border);border-radius:4px;color:var(--cream);font-family:inherit;font-size:0.85rem;padding:7px 10px;width:100%;outline:none;}
-  .inp:focus{border-color:var(--lime);}
-  /* Nonna alert */
-  .nonna-alert{border-radius:6px;padding:10px 12px;margin-bottom:10px;font-size:0.85rem;font-weight:bold;}
-  /* Toast */
-  #toast{position:fixed;bottom:18px;right:18px;background:var(--green);color:#000;padding:9px 14px;border-radius:6px;font-size:0.83rem;font-family:inherit;display:none;z-index:999;max-width:280px;}
-  .msg{font-size:0.76rem;color:var(--lime);margin-top:7px;min-height:16px;}
-  .badge{font-size:0.68rem;color:var(--muted);background:#1A2A1A;padding:2px 5px;border-radius:3px;margin-left:auto;}
-  .picnic-link{display:inline-block;margin-top:8px;color:var(--lime);font-size:0.8rem;text-decoration:none;border:1px solid var(--border);padding:5px 10px;border-radius:4px;}
-  .picnic-link:hover{border-color:var(--lime);}
-  @keyframes slot-spin{0%{transform:translateY(-20px);opacity:0}100%{transform:translateY(0);opacity:1}}
-  .reel.spinning{animation:slot-spin .3s ease-out;}
+:root {
+  --cream:   #FFF8F0;
+  --brown:   #5C2D0E;
+  --brown-l: #8B4513;
+  --red:     #C0392B;
+  --gold:    #E8B84B;
+  --teal:    #27AE60;
+  --white:   #FFFFFF;
+  --muted:   #A08060;
+  --border:  #E8D5C0;
+  --shadow:  0 2px 12px rgba(92,45,14,.10);
+  --card-r:  14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--cream);
+  color: var(--brown);
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 48px;
+}
+/* ── Header ── */
+header {
+  background: var(--brown);
+  padding: 18px 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+header .logo { font-size: 2rem; }
+header h1 {
+  font-size: 1.4rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--gold); text-transform: uppercase;
+}
+header p { font-size: 0.72rem; color: #C8A880; margin-top: 1px; font-style: italic; }
+.nav-link {
+  margin-left: auto; color: #C8A880; text-decoration: none;
+  font-size: 0.8rem; border: 1px solid #8B5C3E;
+  padding: 6px 12px; border-radius: 20px; font-weight: 600;
+  transition: background .2s;
+}
+.nav-link:hover { background: rgba(255,255,255,.1); color: var(--gold); }
+/* ── Grid ── */
+.grid {
+  display: grid; gap: 16px; padding: 20px;
+  max-width: 1100px; margin: 0 auto;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+/* ── Card ── */
+.card {
+  background: var(--white);
+  border-radius: var(--card-r);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card.wide { grid-column: span 2; }
+.card-header {
+  padding: 12px 16px;
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--brown);
+  border-bottom: 2px solid var(--cream);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-body { padding: 16px; }
+/* ── Buttons ── */
+.btn {
+  border: none; border-radius: 20px; cursor: pointer;
+  font-family: 'Poppins', sans-serif; font-weight: 700;
+  font-size: 0.82rem; padding: 8px 16px; transition: all .15s;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.btn-brown { background: var(--brown); color: var(--gold); }
+.btn-brown:hover { background: var(--brown-l); }
+.btn-red { background: var(--red); color: #fff; }
+.btn-red:hover { filter: brightness(1.1); }
+.btn-gold { background: var(--gold); color: var(--brown); }
+.btn-gold:hover { filter: brightness(1.05); }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { filter: brightness(1.1); }
+.btn-purple { background: #8E44AD; color: #fff; }
+.btn-purple:hover { filter: brightness(1.1); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+/* ── Inputs ── */
+.inp {
+  background: var(--cream); border: 1.5px solid var(--border);
+  border-radius: 8px; color: var(--brown);
+  font-family: 'Poppins', sans-serif; font-size: 0.85rem;
+  padding: 8px 12px; width: 100%; outline: none;
+  transition: border-color .2s;
+}
+.inp:focus { border-color: var(--gold); }
+/* ── Luncher counter ── */
+.big-num {
+  text-align: center; font-size: 4rem; font-weight: 800;
+  color: var(--brown); line-height: 1; margin: 8px 0 4px;
+}
+.sub { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; }
+/* ── Budget donut ── */
+.donut-wrap { display: flex; flex-direction: column; align-items: center; padding: 8px 0; }
+.donut-label { font-size: 0.7rem; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.donut-amount { font-size: 1.6rem; font-weight: 800; color: var(--brown); }
+.donut-sub { font-size: 0.72rem; color: var(--red); font-weight: 600; }
+/* ── SpaarBall banner ── */
+.spaarball-banner {
+  background: var(--gold); border-radius: var(--card-r);
+  padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--shadow);
+}
+.spaarball-mascot { font-size: 3rem; }
+.spaarball-text { flex: 1; }
+.spaarball-text h3 { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--brown); }
+.spaarball-text p { font-size: 0.72rem; color: var(--brown-l); margin-top: 2px; }
+.spaarball-pct {
+  background: var(--white); border-radius: 50%;
+  width: 72px; height: 72px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-weight: 800; color: var(--brown); font-size: 1rem; line-height: 1.1;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.spaarball-pct small { font-size: 0.6rem; color: var(--muted); font-weight: 600; }
+/* ── Progress bar ── */
+.pbar-bg { width: 100%; height: 10px; background: var(--cream); border-radius: 5px; overflow: hidden; }
+.pbar { height: 100%; border-radius: 5px; transition: width .5s; }
+/* ── Agenda ── */
+.agenda-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 8px; }
+.agenda-table th { color: var(--muted); padding: 5px 8px; text-align: center; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+.agenda-table td { padding: 6px 8px; text-align: center; border-top: 1px solid var(--cream); }
+.agenda-table td:first-child { text-align: left; font-weight: 600; color: var(--brown); }
+.day-check { cursor: pointer; font-size: 1.1rem; }
+.today-th { color: var(--brown) !important; border-bottom: 2px solid var(--brown) !important; }
+/* ── Inventory ── */
+.inv-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--cream); font-size: 0.83rem; }
+.inv-item:first-child { border-top: none; }
+.inv-emoji { font-size: 1.3rem; width: 28px; text-align: center; }
+.inv-name { flex: 1; font-weight: 600; }
+.inv-bar-wrap { flex: 0 0 80px; }
+.inv-qty { font-weight: 700; font-size: 0.78rem; color: var(--muted); text-align: right; margin-top: 2px; }
+/* ── Picnic list ── */
+.picnic-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--cream); font-size: 0.83rem; }
+.picnic-item:first-child { border-top: none; }
+.picnic-price { font-weight: 700; color: var(--red); margin-left: auto; white-space: nowrap; }
+/* ── Poll ── */
+.poll-item { padding: 8px 0; border-top: 1px solid var(--cream); cursor: pointer; transition: background .1s; }
+.poll-item:first-child { border-top: none; }
+.poll-item:hover { background: var(--cream); border-radius: 8px; padding-left: 6px; }
+.poll-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.83rem; font-weight: 600; }
+.poll-pct { margin-left: auto; font-size: 0.72rem; color: var(--muted); }
+.poll-bar-gold { background: var(--gold) !important; }
+/* ── Requests ── */
+.req-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--cream); font-size: 0.82rem; }
+.req-item:first-child { border-top: none; }
+.req-status { font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; background: var(--cream); color: var(--muted); white-space: nowrap; }
+.req-status.ok { background: #D5F5E3; color: var(--teal); }
+/* ── Mood ── */
+.mood-avg { text-align: center; font-size: 3rem; margin: 8px 0 4px; }
+.mood-btn { cursor: pointer; font-size: 1.5rem; padding: 4px 8px; border-radius: 8px; border: 2px solid transparent; transition: all .15s; display: inline-block; }
+.mood-btn:hover { border-color: var(--gold); transform: scale(1.15); }
+/* ── Oracle ── */
+.oracle-box { background: var(--cream); border-radius: 10px; padding: 14px; text-align: center; margin-top: 12px; display: none; }
+.oracle-ritual { font-size: 0.72rem; color: var(--muted); font-style: italic; margin-bottom: 6px; }
+.oracle-msg { font-size: 0.9rem; font-weight: 700; color: #8E44AD; }
+/* ── Slot Machine ── */
+.reels { display: flex; justify-content: center; gap: 12px; font-size: 3rem; margin: 10px 0; background: var(--cream); padding: 14px; border-radius: 10px; }
+.spin-result { text-align: center; font-size: 0.85rem; color: var(--red); font-weight: 700; min-height: 20px; }
+/* ── Complaints ── */
+.complaint-item { padding: 8px 0; border-top: 1px solid var(--cream); font-size: 0.8rem; }
+.complaint-item:first-child { border-top: none; }
+.complaint-response { font-size: 0.72rem; color: var(--muted); font-style: italic; margin-top: 2px; }
+/* ── Leaderboard ── */
+.lb-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--cream); font-size: 0.83rem; }
+.lb-item:first-child { border-top: none; }
+/* ── Nonna alert ── */
+.nonna-alert { border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.82rem; font-weight: 600; border-left: 4px solid; }
+/* ── Misc ── */
+.msg { font-size: 0.74rem; color: var(--teal); margin-top: 6px; min-height: 16px; font-weight: 600; }
+.picnic-link { display: inline-block; margin-top: 8px; color: var(--brown); font-size: 0.78rem; font-weight: 700; text-decoration: none; border: 1.5px solid var(--border); padding: 6px 12px; border-radius: 20px; }
+.picnic-link:hover { border-color: var(--brown); }
+.label-small { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+/* ── Toast ── */
+#toast { position: fixed; bottom: 20px; right: 20px; background: var(--brown); color: var(--gold); padding: 12px 18px; border-radius: 12px; font-size: 0.84rem; font-weight: 700; font-family: 'Poppins', sans-serif; display: none; z-index: 999; max-width: 300px; box-shadow: 0 4px 20px rgba(92,45,14,.3); }
+@keyframes slot-spin { 0%{transform:translateY(-10px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+.reel.spinning { animation: slot-spin .15s ease-out; }
+@media (max-width: 640px) { .card.wide { grid-column: span 1; } }
 </style>
 </head>
 <body>
 <header>
-  <div><h1>🥙 THE MEATBALL</h1><p>Super Modern Lunch Dashboard voor de Lunch</p></div>
-  <a class="nav-link" href="/">← Weer</a>
+  <span class="logo">🍝</span>
+  <div>
+    <h1>The Meatball</h1>
+    <p>Super Modern Lunch Dashboard voor de Lunch — fatto con amore</p>
+  </div>
+  <a class="nav-link" href="/">← Meteo</a>
 </header>
+
 <div class="grid">
 
-  <!-- Luncher Counter -->
+  <!-- Budget donut -->
   <div class="card">
-    <div class="card-header">👥 Aantal Lunchers <span class="badge" id="weekBadge">week --</span></div>
+    <div class="card-header">💶 WEEKLY BUDGET</div>
     <div class="card-body">
-      <div class="big-num" id="luncherCount">--</div>
-      <div class="sub">mensen eten vandaag mee</div>
-      <div class="btn-row">
-        <button class="btn" onclick="chgLunch(-5)">−5</button>
-        <button class="btn" onclick="chgLunch(-1)">−1</button>
-        <button class="btn" onclick="chgLunch(+1)">+1</button>
-        <button class="btn" onclick="chgLunch(+5)">+5</button>
+      <div id="nonnalert"></div>
+      <div class="donut-wrap" style="margin-bottom:10px">
+        <svg width="160" height="160" viewBox="0 0 160 160" style="margin:0 auto">
+          <circle cx="80" cy="80" r="60" fill="none" stroke="#F5E6D0" stroke-width="20"/>
+          <circle id="donut-ring" cx="80" cy="80" r="60" fill="none" stroke="#E8B84B" stroke-width="20"
+            stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round"
+            transform="rotate(-90 80 80)" style="transition:stroke-dashoffset .6s"/>
+          <circle id="donut-spent" cx="80" cy="80" r="60" fill="none" stroke="#C0392B" stroke-width="20"
+            stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round"
+            transform="rotate(-90 80 80)" style="transition:stroke-dashoffset .6s"/>
+          <text x="80" y="72" text-anchor="middle" font-family="Poppins,sans-serif" font-size="11" font-weight="800" fill="#5C2D0E">€120</text>
+          <text x="80" y="86" text-anchor="middle" font-family="Poppins,sans-serif" font-size="8" font-weight="600" fill="#A08060">WEEKLY BUDGET</text>
+          <text x="80" y="100" text-anchor="middle" font-family="Poppins,sans-serif" font-size="8" font-weight="700" fill="#C0392B" id="donut-spent-label">SPENT: €--</text>
+          <text style="font-size:28px" x="80" y="82" text-anchor="middle" dominant-baseline="middle">🍖</text>
+        </svg>
       </div>
-      <div class="msg" id="lunchMsg"></div>
+      <div class="btn-row" style="justify-content:space-between;margin-bottom:8px">
+        <div><div class="label-small">Uitgegeven</div><div style="font-size:1.2rem;font-weight:800;color:var(--red)" id="budSpent">€--</div></div>
+        <div style="text-align:right"><div class="label-small">Resterend</div><div style="font-size:1.2rem;font-weight:800;color:var(--teal)" id="budRem">€--</div></div>
+      </div>
     </div>
   </div>
 
-  <!-- Budget -->
+  <!-- Luncher counter -->
   <div class="card">
-    <div class="card-header">💶 Budget (€120 cap)</div>
+    <div class="card-header">👥 AANTAL LUNCHERS <span style="margin-left:auto;font-size:0.68rem;color:var(--muted);font-weight:600" id="weekBadge">WEEK --</span></div>
     <div class="card-body">
-      <div id="nonnalert"></div>
-      <div class="brow"><span>Uitgegeven</span><span id="budSpent">€--</span></div>
-      <div class="brow"><span>Cap</span><span id="budCap">€--</span></div>
-      <div class="bar-bg"><div class="bar" id="budBar" style="width:0%"></div></div>
-      <div class="brow" style="font-weight:bold"><span>Resterend</span><span id="budRem">€--</span></div>
-      <div class="spaarball">
-        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">🏦 SpaarBall — budget over gaat hierheen</div>
-        <div class="euro" id="spaarbBal">€--</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:3px" id="spaarbEarn">SpaarPlan Biertafels · 1,23%</div>
+      <div class="big-num" id="luncherCount">--</div>
+      <div class="sub">persone mangiano oggi</div>
+      <div class="btn-row" style="justify-content:center;margin-bottom:8px">
+        <button class="btn btn-brown" onclick="chgLunch(-5)">−5</button>
+        <button class="btn btn-brown" onclick="chgLunch(-1)">−1</button>
+        <button class="btn btn-gold" onclick="chgLunch(+1)">+1</button>
+        <button class="btn btn-gold" onclick="chgLunch(+5)">+5</button>
+      </div>
+      <div class="msg" id="lunchMsg"></div>
+      <!-- Sfeer-o-meter in same card -->
+      <div style="border-top:1px solid var(--cream);margin-top:12px;padding-top:12px">
+        <div class="label-small" style="margin-bottom:6px">🌡️ Sfeer-o-meter</div>
+        <div style="text-align:center;font-size:2rem;margin-bottom:4px" id="moodAvgEmoji">🤔</div>
+        <div style="text-align:center;font-size:0.75rem;color:var(--muted);margin-bottom:8px" id="moodAvgLabel">Nog geen stemmen</div>
+        <input class="inp" id="moodName" placeholder="Jouw naam..." style="margin-bottom:6px">
+        <div class="btn-row" style="justify-content:center">
+          <span class="mood-btn" onclick="voteMood(1)" title="Vreselijk">💀</span>
+          <span class="mood-btn" onclick="voteMood(2)" title="Slecht">😞</span>
+          <span class="mood-btn" onclick="voteMood(3)" title="Meh">😐</span>
+          <span class="mood-btn" onclick="voteMood(4)" title="Goed">😊</span>
+          <span class="mood-btn" onclick="voteMood(5)" title="GEWELDIG">🔥</span>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Agenda -->
   <div class="card wide">
-    <div class="card-header">📅 Lunch Agenda</div>
+    <div class="card-header">📅 AGENDA: WHO'S AT OFFICE</div>
     <div class="card-body">
       <table class="agenda-table">
-        <thead><tr><th>Naam</th><th id="th-MA">MA</th><th id="th-DI">DI</th><th id="th-WO">WO</th><th id="th-DO">DO</th><th id="th-VR">VR</th></tr></thead>
+        <thead><tr>
+          <th>NOME</th>
+          <th id="th-MA">MA</th><th id="th-DI">DI</th><th id="th-WO">WO</th>
+          <th id="th-DO">DO</th><th id="th-VR">VR</th>
+        </tr></thead>
         <tbody id="agendaBody"></tbody>
       </table>
       <div class="msg" id="agendaMsg"></div>
     </div>
   </div>
 
-  <!-- Leaderboard -->
+  <!-- Picnic List -->
   <div class="card">
-    <div class="card-header">🏆 Lunch Leaderboard</div>
+    <div class="card-header">🛒 PICNIC LIST</div>
     <div class="card-body">
-      <div id="leaderboard">Laden…</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">Lijst op basis van lage voorraad</div>
+      <div id="picnicList">Laden…</div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-red" onclick="orderPicnic()">🛒 BESTELLEN</button>
+        <a class="picnic-link" id="picnicCartLink" href="https://picnic.app" target="_blank" style="display:none">🔗 Winkelmandje</a>
+      </div>
+      <div class="msg" id="picnicMsg"></div>
     </div>
   </div>
 
-  <!-- Sfeer-o-meter -->
+  <!-- Poll -->
   <div class="card">
-    <div class="card-header">🌡️ Sfeer-o-meter</div>
+    <div class="card-header">💡 LUNCH SUGGESTION POLL</div>
     <div class="card-body">
-      <div class="mood-avg" id="moodAvgEmoji">🤔</div>
-      <div style="text-align:center;font-size:0.85rem;color:var(--muted);margin-bottom:12px" id="moodAvgLabel">Nog geen stemmen</div>
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:6px">Jouw naam:</div>
-      <input class="inp" id="moodName" placeholder="Naam..." style="margin-bottom:8px">
-      <div class="btn-row">
-        <span class="mood-btn" onclick="voteMood(1)" title="Vreselijk">💀</span>
-        <span class="mood-btn" onclick="voteMood(2)" title="Slecht">😞</span>
-        <span class="mood-btn" onclick="voteMood(3)" title="Meh">😐</span>
-        <span class="mood-btn" onclick="voteMood(4)" title="Goed">😊</span>
-        <span class="mood-btn" onclick="voteMood(5)" title="GEWELDIG">🔥</span>
-      </div>
-      <div id="moodVotes" style="margin-top:10px;font-size:0.78rem;color:var(--muted)"></div>
-      <div class="msg" id="moodMsg"></div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px">Klik om te stemmen — VOTA!</div>
+      <div id="pollList">Laden…</div>
     </div>
   </div>
 
   <!-- Inventory -->
   <div class="card">
-    <div class="card-header">📦 Voorraad</div>
+    <div class="card-header">📦 VOORRAAD</div>
     <div class="card-body">
       <div id="invList">Laden…</div>
-      <button class="btn ok" style="margin-top:9px;width:100%" onclick="scanInv()">📸 Scan voorraadla</button>
+      <button class="btn btn-teal" style="margin-top:12px;width:100%" onclick="scanInv()">📸 SCAN VOORRAADLA</button>
       <div class="msg" id="invMsg"></div>
     </div>
   </div>
 
-  <!-- Picnic List -->
-  <div class="card">
-    <div class="card-header">🛒 Picnic Lijst</div>
-    <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Automatisch op basis van lage voorraad</div>
-      <div id="picnicList">Laden…</div>
-      <button class="btn bad" style="margin-top:9px;width:100%" onclick="orderPicnic()">🛒 Bestel via Picnic</button>
-      <a class="picnic-link" id="picnicCartLink" href="https://picnic.app" target="_blank" style="display:none">🔗 Open winkelmandje →</a>
-      <div class="msg" id="picnicMsg"></div>
+  <!-- SpaarBall banner -->
+  <div class="spaarball-banner wide">
+    <div class="spaarball-mascot">🍖</div>
+    <div class="spaarball-text">
+      <h3>Savings Meatball Piggy Bank</h3>
+      <p>Budget surplus gaat naar de SpaarBall — SpaarPlan Biertafels</p>
+      <div style="font-size:1.4rem;font-weight:800;color:var(--brown);margin-top:4px" id="spaarbBal">€--</div>
+      <div style="font-size:0.72rem;color:var(--brown-l)" id="spaarbEarn">+€-- dit jaar</div>
     </div>
+    <div class="spaarball-pct">
+      <span id="spaarbPct">1,23%</span>
+      <small>SAVED</small>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="card">
+    <div class="card-header">🏆 LUNCH LEADERBOARD</div>
+    <div class="card-body"><div id="leaderboard">Laden…</div></div>
   </div>
 
   <!-- Product Requests -->
   <div class="card">
-    <div class="card-header">🛍️ Product Requests</div>
+    <div class="card-header">🛍️ PRODUCT REQUESTS</div>
     <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Vraag een product aan — 3 stemmen = goedgekeurd!</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">3 stemmen = automatisch goedgekeurd!</div>
       <div style="display:flex;gap:6px;margin-bottom:8px">
-        <input class="inp" id="reqName" placeholder="Product naam...">
-        <input class="inp" id="reqWho" placeholder="Jouw naam" style="max-width:100px">
+        <input class="inp" id="reqName" placeholder="Product...">
+        <input class="inp" id="reqWho" placeholder="Naam" style="max-width:90px">
       </div>
-      <button class="btn ok" onclick="submitRequest()" style="width:100%;margin-bottom:10px">➕ Aanvragen</button>
+      <button class="btn btn-teal" onclick="submitRequest()" style="width:100%;margin-bottom:10px">AANVRAGEN +</button>
       <div id="reqList" style="font-size:0.82rem">Geen requests</div>
       <div class="msg" id="reqMsg"></div>
     </div>
   </div>
 
-  <!-- Suggestion Poll -->
+  <!-- Slot Machine -->
   <div class="card">
-    <div class="card-header">💡 Lunch Poll — VORM POLL</div>
+    <div class="card-header">🎰 COSA MANGIAMO? (Slot Machine)</div>
     <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Klik om te stemmen 👇</div>
-      <div id="pollList">Laden…</div>
+      <div class="reels"><span id="r1">🍝</span><span id="r2">🍖</span><span id="r3">🍅</span></div>
+      <div class="spin-result" id="spinResult">Premi il pulsante…</div>
+      <button class="btn btn-gold" style="width:100%;margin-top:10px;font-size:0.95rem" onclick="spinSlot()">🎰 GIRA LA RUOTA!</button>
     </div>
   </div>
 
-  <!-- Slot Machine 🎰 -->
+  <!-- Oracle -->
   <div class="card">
-    <div class="card-header">🎰 Wat Eten We? (Slot Machine)</div>
+    <div class="card-header">🔮 ORACOLO DEL MEATBALL</div>
     <div class="card-body">
-      <div class="reels" id="reels"><span id="r1">🍝</span><span id="r2">🍖</span><span id="r3">🍅</span></div>
-      <div class="spin-result" id="spinResult">Druk op de knop om het lot te vragen</div>
-      <button class="btn gold" style="width:100%;margin-top:10px;font-size:1rem" onclick="spinSlot()">🎰 DRAAIEN!</button>
-    </div>
-  </div>
-
-  <!-- Meatball Oracle -->
-  <div class="card">
-    <div class="card-header">🔮 Meatball Oracle</div>
-    <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Stel de Oracle een ja/nee vraag</div>
-      <input class="inp" id="oracleQ" placeholder="Bijv: Mogen we pizza bestellen?" style="margin-bottom:8px">
-      <button class="btn purple" style="width:100%" onclick="askOracle()">🔮 Vraag de Oracle</button>
-      <div class="oracle-box" id="oracleBox" style="display:none">
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">Fai una domanda sì/no all'Oracle…</div>
+      <input class="inp" id="oracleQ" placeholder="Mogen we pizza bestellen?" style="margin-bottom:8px">
+      <button class="btn btn-purple" style="width:100%" onclick="askOracle()">🔮 CHIEDI ALL'ORACOLO</button>
+      <div class="oracle-box" id="oracleBox">
         <div class="oracle-ritual" id="oracleRitual"></div>
         <div class="oracle-msg" id="oracleMsg"></div>
       </div>
@@ -350,141 +464,313 @@ LUNCH_HTML = """<!DOCTYPE html>
 
   <!-- Complaint Box -->
   <div class="card">
-    <div class="card-header">😤 Klachtenbus (anoniem)</div>
+    <div class="card-header">😤 KLACHTENBUS (anonimo)</div>
     <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Klaag hier. Niemand ziet het. (Behalve iedereen.)</div>
-      <textarea class="inp" id="complaintText" rows="2" placeholder="Jouw klacht..." style="resize:none;margin-bottom:8px"></textarea>
-      <button class="btn bad" style="width:100%;margin-bottom:10px" onclick="submitComplaint()">😤 Indienen</button>
-      <div id="complaintList" style="font-size:0.8rem">Nog geen klachten. Indrukwekkend.</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">Klaag vrij. Nessuno legge. (Tranne tutti.)</div>
+      <textarea class="inp" id="complaintText" rows="2" placeholder="La tua lamentela..." style="resize:none;margin-bottom:8px"></textarea>
+      <button class="btn btn-red" style="width:100%;margin-bottom:10px" onclick="submitComplaint()">😤 INDIETRO!</button>
+      <div id="complaintList" style="font-size:0.78rem">Ancora nessun reclamo. Straordinario.</div>
     </div>
   </div>
 
   <!-- Order History -->
   <div class="card">
-    <div class="card-header">📋 Bestelhistorie</div>
-    <div class="card-body"><div id="orderHist" style="font-size:0.8rem;color:var(--muted)">Geen bestellingen</div></div>
+    <div class="card-header">📋 BESTELHISTORIE</div>
+    <div class="card-body"><div id="orderHist" style="font-size:0.78rem;color:var(--muted)">Nessun ordine</div></div>
   </div>
 
   <!-- Training Tool -->
   <div class="card">
-    <div class="card-header">🎓 Training Tool</div>
+    <div class="card-header">🎓 SCUOLA DI CUCINA</div>
     <div class="card-body">
-      <div style="text-align:center;font-size:1.6rem;font-weight:bold;color:var(--yellow);margin-bottom:10px">⭐ <span id="trainScore">0</span> pts</div>
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="font-size:2rem;font-weight:800;color:var(--gold)">⭐ <span id="trainScore">0</span></div>
+        <div style="font-size:0.7rem;color:var(--muted);font-weight:700;letter-spacing:1px">PUNTI CUCINA</div>
+      </div>
       <div id="trainTips">Laden…</div>
     </div>
   </div>
 
 </div>
 <div id="toast"></div>
+
 <script>
 let state = {};
-function toast(msg,col){const el=document.getElementById("toast");el.textContent=msg;el.style.background=col||"var(--green)";el.style.display="block";setTimeout(()=>el.style.display="none",3500);}
-function msg(id,txt,ms){const el=document.getElementById(id);if(!el)return;el.textContent=txt;if(ms)setTimeout(()=>{if(el.textContent===txt)el.textContent="";},ms);}
-async function loadState(){const r=await fetch("/lunch/state");state=await r.json();render();}
-function render(){
-  document.getElementById("luncherCount").textContent=state.lunchers;
-  document.getElementById("weekBadge").textContent="week "+state.week;
-  // Nonna alert
-  const na=state.budget.nonna_alert;
-  const nael=document.getElementById("nonnalert");
-  if(na){nael.innerHTML=`<div class="nonna-alert" style="background:${na.color}20;border-left:3px solid ${na.color};color:${na.color}">${na.level}<br><span style="font-weight:normal;font-size:0.8rem">${na.msg}</span></div>`;}
-  else{nael.innerHTML="";}
+
+function toast(msg, col) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.style.background = col || "var(--brown)";
+  el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 3500);
+}
+function msg(id, txt, ms) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = txt;
+  if (ms) setTimeout(() => { if (el.textContent === txt) el.textContent = ""; }, ms);
+}
+
+async function loadState() {
+  const r = await fetch("/lunch/state");
+  state = await r.json();
+  render();
+}
+
+function renderDonut(pct) {
+  const circ = 2 * Math.PI * 60; // 377
+  // gold = full ring as bg (already set in HTML)
+  // spent = red overlay
+  const spentOff = circ * (1 - pct / 100);
+  document.getElementById("donut-spent").setAttribute("stroke-dashoffset", spentOff.toFixed(1));
+}
+
+function render() {
+  document.getElementById("luncherCount").textContent = state.lunchers;
+  document.getElementById("weekBadge").textContent = "WEEK " + state.week;
+
   // Budget
-  const b=state.budget;
-  document.getElementById("budSpent").textContent="€"+b.spent.toFixed(2);
-  document.getElementById("budCap").textContent="€"+b.cap.toFixed(2);
-  document.getElementById("budRem").textContent="€"+b.remaining.toFixed(2);
-  const bar=document.getElementById("budBar");
-  bar.style.width=Math.min(b.pct_used,100)+"%";
-  bar.style.background=b.pct_used>=80?"var(--red)":b.pct_used>=60?"var(--yellow)":"var(--green)";
-  document.getElementById("spaarbBal").textContent="€"+b.spaarball.toFixed(2);
-  document.getElementById("spaarbEarn").textContent="SpaarPlan Biertafels · "+b.spaarball_pct+"% · +€"+b.spaarball_earn.toFixed(2)+" dit jaar";
-  // Agenda
-  const tbody=document.getElementById("agendaBody");
-  const days=state.weekdays;
-  days.forEach(d=>{const th=document.getElementById("th-"+d);if(th)th.style.color=d===state.today?"var(--lime)":"";});
-  tbody.innerHTML=Object.entries(state.agenda).map(([name,sched])=>
-    `<tr><td>${name}</td>${days.map(d=>`<td class="${d===state.today?'today-col':''}">`+
-    `<span class="day-check" onclick="toggleAgenda('${name}','${d}')">${sched[d]?"✅":"❌"}</span></td>`).join("")}</tr>`
-  ).join("");
-  // Leaderboard
-  document.getElementById("leaderboard").innerHTML=state.leaderboard.map((p,i)=>{
-    const medals=["🥇","🥈","🥉"];
-    return `<div class="lb-item"><span class="lb-rank">${medals[i]||"👤"}</span><span style="flex:1">${p.name}</span><span style="color:var(--lime);font-weight:bold">${p.days} dagen</span></div>`;
-  }).join("");
+  const b = state.budget;
+  renderDonut(b.pct_used);
+  document.getElementById("donut-spent-label").textContent = "SPENT: €" + b.spent.toFixed(2);
+  document.getElementById("budSpent").textContent = "€" + b.spent.toFixed(2);
+  document.getElementById("budRem").textContent   = "€" + b.remaining.toFixed(2);
+  document.getElementById("spaarbBal").textContent  = "€" + b.spaarball.toFixed(2);
+  document.getElementById("spaarbEarn").textContent = "+€" + b.spaarball_earn.toFixed(2) + " dit jaar";
+  // Nonna alert
+  const na = state.budget.nonna_alert;
+  const nael = document.getElementById("nonnalert");
+  if (na) {
+    nael.innerHTML = `<div class="nonna-alert" style="background:${na.color}18;border-color:${na.color};color:${na.color}">${na.level} ${na.msg}</div>`;
+  } else { nael.innerHTML = ""; }
+
   // Mood
-  const m=state.mood;
-  document.getElementById("moodAvgEmoji").textContent=m.emoji||"🤔";
-  document.getElementById("moodAvgLabel").textContent=m.avg?m.avg+" / 5 — "+m.label:"Nog geen stemmen";
-  document.getElementById("moodVotes").innerHTML=Object.entries(m.votes||{}).map(([k,v])=>
-    `<span style="margin-right:8px">${v.emoji} <b>${k}</b></span>`).join("");
+  const m = state.mood;
+  document.getElementById("moodAvgEmoji").textContent = m.emoji || "🤔";
+  document.getElementById("moodAvgLabel").textContent = m.avg ? m.avg + "/5 — " + m.label : "Nog geen stemmen";
+
+  // Agenda
+  const days = state.weekdays;
+  days.forEach(d => {
+    const th = document.getElementById("th-" + d);
+    if (th) { th.className = d === state.today ? "today-th" : ""; }
+  });
+  document.getElementById("agendaBody").innerHTML = Object.entries(state.agenda).map(([name, sched]) =>
+    `<tr><td>${name}</td>${days.map(d =>
+      `<td><span class="day-check" onclick="toggleAgenda('${name}','${d}')" title="${name} · ${d}">`+
+      (sched[d] ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--teal);border-radius:50%;color:#fff;font-size:0.7rem">✓</span>`
+                : `<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--cream);border-radius:50%;color:var(--muted);font-size:0.75rem">·</span>`)+
+      `</span></td>`).join("")}</tr>`
+  ).join("");
+
+  // Leaderboard
+  const medals = ["🥇","🥈","🥉"];
+  document.getElementById("leaderboard").innerHTML = state.leaderboard.map((p, i) =>
+    `<div class="lb-item"><span style="font-size:1.3rem">${medals[i]||"🍝"}</span><span style="flex:1;font-weight:600">${p.name}</span>`+
+    `<span style="font-weight:800;color:var(--brown)">${p.days} <span style="font-size:0.7rem;color:var(--muted);font-weight:600">giorni</span></span></div>`
+  ).join("");
+
   // Inventory
-  document.getElementById("invList").innerHTML=state.inventory.map(i=>{
-    const low=i.qty<i.min;
-    return `<div class="inv-item"><span class="inv-emoji">${i.emoji}</span><span class="inv-name">${i.name}</span>`+
-      `<span class="inv-qty ${low?'inv-low':'inv-ok'}">${i.qty}</span><span class="inv-unit">${i.unit}</span>`+
-      `${low?'<span style="font-size:0.7rem;color:var(--red)">⚠️</span>':''}</div>`;
+  document.getElementById("invList").innerHTML = state.inventory.map(i => {
+    const low = i.qty < i.min;
+    const pct = Math.min(100, Math.round((i.qty / (i.min * 2)) * 100));
+    return `<div class="inv-item">
+      <span class="inv-emoji">${i.emoji}</span>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+          <span class="inv-name" style="${low?'color:var(--red)':''}">${i.name}</span>
+          <span style="font-size:0.72rem;font-weight:700;color:${low?'var(--red)':'var(--muted)'}">${i.qty}${i.unit}</span>
+        </div>
+        <div class="pbar-bg"><div class="pbar" style="width:${pct}%;background:${low?'var(--red)':pct>60?'var(--teal)':'var(--gold)'}"></div></div>
+      </div></div>`;
   }).join("");
+
   // Picnic list
-  const pl=document.getElementById("picnicList");
-  pl.innerHTML=!state.picnic_list||state.picnic_list.length===0
-    ?'<div style="color:var(--green);font-size:0.82rem">✅ Voorraad prima</div>'
-    :state.picnic_list.map(i=>`<div class="picnic-item"><span>${i.emoji}</span><span style="flex:1">${i.name}</span><span style="color:var(--yellow);font-size:0.8rem">+${i.needed} ${i.unit}</span></div>`).join("");
-  // Product requests
-  const rl=document.getElementById("reqList");
-  rl.innerHTML=!state.product_requests||state.product_requests.length===0
-    ?'<span style="color:var(--muted)">Geen requests</span>'
-    :state.product_requests.map(r=>`<div class="req-item">`+
-      `<span style="font-size:1.1rem">${r.emoji}</span>`+
-      `<span style="flex:1"><b>${r.name}</b> <span style="color:var(--muted);font-size:0.75rem">— ${r.requester}</span></span>`+
-      `<span style="cursor:pointer;margin-right:4px" onclick="voteRequest(${r.id})" title="Stem">👍 ${r.votes}</span>`+
-      `<span class="req-status">${r.status}</span>`+
-      `</div>`).join("");
+  const pl = document.getElementById("picnicList");
+  pl.innerHTML = !state.picnic_list || state.picnic_list.length === 0
+    ? `<div style="color:var(--teal);font-weight:700;font-size:0.82rem">✅ La dispensa è piena!</div>`
+    : state.picnic_list.map(i =>
+        `<div class="picnic-item"><span style="font-size:1.2rem">${i.emoji}</span>`+
+        `<span style="flex:1;font-weight:600">${i.name}</span>`+
+        `<span class="picnic-price">+${i.needed} ${i.unit}</span></div>`
+      ).join("");
+
   // Poll
-  const poll=state.suggestion.poll||[];
-  const maxV=Math.max(...poll.map(p=>p.votes),1);
-  const winner=poll.reduce((a,b)=>b.votes>a.votes?b:a,poll[0]||{});
-  document.getElementById("pollList").innerHTML=poll.map(p=>{
-    const pct=Math.round((p.votes/maxV)*100);
-    const isW=p.votes>0&&p.dish===winner.dish;
-    return `<div class="poll-item" onclick="votePoll('${p.dish.replace(/'/g,"\\'")}')"><span>${p.emoji}</span>`+
-      `<span style="flex:0 0 130px;font-size:0.8rem;${isW?'color:var(--gold);font-weight:bold':''}">${p.dish}</span>`+
-      `<div class="poll-bar-bg"><div class="poll-bar" style="width:${pct}%;${isW?'background:var(--gold)':''}"></div></div>`+
-      `<span class="poll-votes ${isW?'':'poll-votes'}">${p.votes}</span></div>`;
+  const poll = state.suggestion.poll || [];
+  const maxV = Math.max(...poll.map(p => p.votes), 1);
+  const winner = poll.reduce((a, b) => b.votes > a.votes ? b : a, poll[0] || {});
+  document.getElementById("pollList").innerHTML = poll.map(p => {
+    const pct = Math.round((p.votes / maxV) * 100);
+    const isW = p.votes > 0 && p.dish === winner.dish;
+    return `<div class="poll-item" onclick="votePoll('${p.dish.replace(/'/g,"\\'")}')">
+      <div class="poll-top">
+        <span>${p.emoji}</span>
+        <span style="${isW?'color:var(--gold);font-weight:800':''}">${p.dish}</span>
+        <span class="poll-pct">${p.votes} v</span>
+      </div>
+      <div class="pbar-bg" style="height:6px"><div class="pbar ${isW?'poll-bar-gold':''}" style="width:${pct}%;background:${isW?'var(--gold)':'var(--red)'}"></div></div>
+    </div>`;
   }).join("");
+
+  // Product requests
+  const rl = document.getElementById("reqList");
+  rl.innerHTML = !state.product_requests || state.product_requests.length === 0
+    ? `<span style="color:var(--muted);font-size:0.8rem">Nessuna richiesta</span>`
+    : state.product_requests.map(r =>
+        `<div class="req-item">
+          <span style="font-size:1.2rem">${r.emoji}</span>
+          <div style="flex:1"><div style="font-weight:600">${r.name}</div><div style="font-size:0.7rem;color:var(--muted)">${r.requester}</div></div>
+          <span onclick="voteRequest(${r.id})" style="cursor:pointer;font-size:0.78rem;font-weight:700;color:var(--brown);margin-right:6px">👍 ${r.votes}</span>
+          <span class="req-status ${r.status.includes('Goedgekeurd')?'ok':''}">${r.status}</span>
+        </div>`
+      ).join("");
+
   // Order history
-  const oh=document.getElementById("orderHist");
-  oh.innerHTML=!state.order_history||state.order_history.length===0?'Geen bestellingen'
-    :state.order_history.slice().reverse().map(o=>`<div style="padding:4px 0;border-bottom:1px solid var(--border)">`+
-      `<span style="color:var(--lime)">${o.time}</span> — ${o.items.join(", ")}<span style="color:var(--yellow);float:right">€${o.cost.toFixed(2)}</span></div>`
-    ).join("");
+  document.getElementById("orderHist").innerHTML = !state.order_history || state.order_history.length === 0
+    ? `<span style="color:var(--muted)">Nessun ordine</span>`
+    : state.order_history.slice().reverse().map(o =>
+        `<div style="padding:5px 0;border-top:1px solid var(--cream);font-size:0.78rem">
+          <span style="font-weight:700;color:var(--brown)">${o.time}</span> — ${o.items.join(", ")}
+          <span style="color:var(--red);float:right;font-weight:700">€${o.cost.toFixed(2)}</span>
+        </div>`).join("");
+
   // Complaints
-  document.getElementById("complaintList").innerHTML=!state.complaints||state.complaints.length===0
-    ?'Nog geen klachten. Indrukwekkend.'
-    :state.complaints.slice().reverse().map(c=>`<div class="complaint-item">`+
-      `<span style="color:var(--muted);font-size:0.7rem">${c.time}</span> ${c.text}`+
-      `<div class="complaint-response">${c.response}</div></div>`).join("");
+  document.getElementById("complaintList").innerHTML = !state.complaints || state.complaints.length === 0
+    ? `<span style="color:var(--muted)">Ancora nessun reclamo. Straordinario.</span>`
+    : state.complaints.slice().reverse().map(c =>
+        `<div class="complaint-item"><span style="color:var(--muted);font-size:0.68rem">${c.time}</span> ${c.text}<div class="complaint-response">${c.response}</div></div>`
+      ).join("");
+
   // Training
-  document.getElementById("trainScore").textContent=state.training_score;
-  document.getElementById("trainTips").innerHTML=state.training_tips.map(t=>
-    `<div class="tip-card" onclick="markTip(${t.id})"><span style="font-size:1.2rem">${t.emoji}</span><span style="font-size:0.82rem">${t.tip}</span></div>`
+  document.getElementById("trainScore").textContent = state.training_score;
+  document.getElementById("trainTips").innerHTML = state.training_tips.map(t =>
+    `<div onclick="markTip(${t.id})" style="display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;cursor:pointer;transition:background .1s;font-size:0.8rem;border-top:1px solid var(--cream)"
+         onmouseover="this.style.background='var(--cream)'" onmouseout="this.style.background=''">`+
+    `<span style="font-size:1.1rem">${t.emoji}</span><span style="font-weight:500">${t.tip}</span></div>`
   ).join("");
 }
-async function chgLunch(d){const n=(state.lunchers||0)+d;const r=await fetch("/lunch/lunchers?n="+n);const x=await r.json();state.lunchers=x.lunchers;document.getElementById("luncherCount").textContent=x.lunchers;msg("lunchMsg","👥 "+x.lunchers+" lunchers",2000);}
-async function toggleAgenda(person,day){const r=await fetch("/lunch/agenda?person="+encodeURIComponent(person)+"&day="+day);const d=await r.json();state.agenda=d.agenda;render();msg("agendaMsg",person+" op "+day+" bijgewerkt",2000);}
-async function votePoll(dish){const r=await fetch("/lunch/vote?dish="+encodeURIComponent(dish));const d=await r.json();const item=state.suggestion.poll.find(p=>p.dish===dish);if(item)item.votes=d.votes;render();toast("👍 Gestemd op "+dish+"!");}
-async function scanInv(){msg("invMsg","📸 Scanning...");const r=await fetch("/lunch/scan");const d=await r.json();state.inventory=d.inventory;render();msg("invMsg",d.message,3000);toast(d.message);}
-async function orderPicnic(){msg("picnicMsg","🛒 Bestellen...");const r=await fetch("/lunch/order");const d=await r.json();if(d.ok){toast(d.message,"var(--sauce)");if(d.picnic_url){const lnk=document.getElementById("picnicCartLink");lnk.href=d.picnic_url;lnk.style.display="inline-block";}await loadState();}else{toast("✅ "+d.message,"var(--green)");}msg("picnicMsg",d.message,4000);}
-async function submitRequest(){const name=document.getElementById("reqName").value.trim();const who=document.getElementById("reqWho").value.trim();if(!name){toast("Geef een productnaam in!","var(--sauce)");return;}const r=await fetch("/lunch/request?name="+encodeURIComponent(name)+"&who="+encodeURIComponent(who));const d=await r.json();if(d.ok){state.product_requests.push(d.request);document.getElementById("reqName").value="";render();toast("✅ Request ingediend: "+name);}msg("reqMsg","",0);}
-async function voteRequest(id){const r=await fetch("/lunch/request/vote?id="+id);const d=await r.json();if(d.ok){const req=state.product_requests.find(x=>x.id===id);if(req){req.votes=d.votes;req.status=d.status;}render();toast("👍 Gestemd! ("+d.votes+" stemmen)");}}
-async function voteMood(score){const person=document.getElementById("moodName").value.trim()||"Anoniem";const r=await fetch("/lunch/mood?person="+encodeURIComponent(person)+"&score="+score);const d=await r.json();state.mood=d.mood;render();toast(d.emoji+" Sfeer geregistreerd: "+d.label);}
-async function askOracle(){const q=document.getElementById("oracleQ").value.trim()||"Wat is het antwoord?";const r=await fetch("/lunch/oracle?q="+encodeURIComponent(q));const d=await r.json();const box=document.getElementById("oracleBox");box.style.display="block";document.getElementById("oracleRitual").textContent=d.ritual;document.getElementById("oracleMsg").textContent=d.message;toast("🔮 De Oracle heeft gesproken!","var(--purple)");}
-async function spinSlot(){const btn=document.querySelector(".btn.gold");btn.disabled=true;btn.textContent="🎲 Draaien...";// Animate reels
-const items=["🍝","🍕","🌭","🧆","🥙","🍖","🥗","🍔","🌮","🍛","🍣","🥩","🥘","🫕","🍱"];let frames=0;const anim=setInterval(()=>{["r1","r2","r3"].forEach(id=>document.getElementById(id).textContent=items[Math.floor(Math.random()*items.length)]);if(++frames>15)clearInterval(anim);},80);
-setTimeout(async()=>{const r=await fetch("/lunch/spin");const d=await r.json();document.getElementById("r1").textContent=d.reels[0];document.getElementById("r2").textContent=d.reels[1];document.getElementById("r3").textContent=d.reels[2];document.getElementById("spinResult").textContent=d.message;if(d.win){document.getElementById("spinResult").style.color="var(--gold)";toast("🎰🎰🎰 JACKPOT!!!","var(--gold)");}else{document.getElementById("spinResult").style.color="var(--yellow)";}btn.disabled=false;btn.textContent="🎰 DRAAIEN!";},1400);}
-async function submitComplaint(){const text=document.getElementById("complaintText").value.trim();if(!text){toast("Je klacht is leeg. Dat is ook een klacht, eigenlijk.","var(--sauce)");return;}const r=await fetch("/lunch/complaint?text="+encodeURIComponent(text));const d=await r.json();document.getElementById("complaintText").value="";state.complaints.push({text,time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),response:d.response});render();toast(d.response,"#333");}
-async function markTip(id){const r=await fetch("/lunch/training?tip_id="+id);const d=await r.json();document.getElementById("trainScore").textContent=d.score;toast("🎓 "+d.message);}
-loadState();setInterval(loadState,30000);
+
+// ── Actions ──
+async function chgLunch(d) {
+  const n = (state.lunchers||0) + d;
+  const r = await fetch("/lunch/lunchers?n=" + n);
+  const x = await r.json();
+  state.lunchers = x.lunchers;
+  document.getElementById("luncherCount").textContent = x.lunchers;
+  msg("lunchMsg", "👥 " + x.lunchers + " lunchers", 2000);
+}
+async function toggleAgenda(person, day) {
+  const r = await fetch("/lunch/agenda?person=" + encodeURIComponent(person) + "&day=" + day);
+  const d = await r.json();
+  state.agenda = d.agenda;
+  render();
+  msg("agendaMsg", person + " · " + day + " bijgewerkt", 2000);
+}
+async function votePoll(dish) {
+  const r = await fetch("/lunch/vote?dish=" + encodeURIComponent(dish));
+  const d = await r.json();
+  const item = state.suggestion.poll.find(p => p.dish === dish);
+  if (item) item.votes = d.votes;
+  render();
+  toast("👍 Votato: " + dish + "!");
+}
+async function scanInv() {
+  msg("invMsg", "📸 Scanning…");
+  const r = await fetch("/lunch/scan");
+  const d = await r.json();
+  state.inventory = d.inventory;
+  render();
+  msg("invMsg", d.message, 3000);
+  toast(d.message);
+}
+async function orderPicnic() {
+  msg("picnicMsg", "🛒 Ordinando…");
+  const r = await fetch("/lunch/order");
+  const d = await r.json();
+  if (d.ok) {
+    toast(d.message, "var(--red)");
+    if (d.picnic_url) {
+      const lnk = document.getElementById("picnicCartLink");
+      lnk.href = d.picnic_url; lnk.style.display = "inline-block";
+    }
+    await loadState();
+  } else {
+    toast("✅ " + d.message, "var(--teal)");
+  }
+  msg("picnicMsg", d.message, 4000);
+}
+async function submitRequest() {
+  const name = document.getElementById("reqName").value.trim();
+  const who  = document.getElementById("reqWho").value.trim();
+  if (!name) { toast("Inserisci un prodotto!", "var(--red)"); return; }
+  const r = await fetch("/lunch/request?name=" + encodeURIComponent(name) + "&who=" + encodeURIComponent(who));
+  const d = await r.json();
+  if (d.ok) { state.product_requests.push(d.request); document.getElementById("reqName").value = ""; render(); toast("✅ Richiesta: " + name); }
+}
+async function voteRequest(id) {
+  const r = await fetch("/lunch/request/vote?id=" + id);
+  const d = await r.json();
+  if (d.ok) {
+    const req = state.product_requests.find(x => x.id === id);
+    if (req) { req.votes = d.votes; req.status = d.status; }
+    render(); toast("👍 " + d.votes + " stemmen!");
+  }
+}
+async function voteMood(score) {
+  const person = document.getElementById("moodName").value.trim() || "Anoniem";
+  const r = await fetch("/lunch/mood?person=" + encodeURIComponent(person) + "&score=" + score);
+  const d = await r.json();
+  state.mood = d.mood;
+  render();
+  toast(d.emoji + " Sfeer: " + d.label);
+}
+async function askOracle() {
+  const q = document.getElementById("oracleQ").value.trim() || "Wat is het antwoord?";
+  const r = await fetch("/lunch/oracle?q=" + encodeURIComponent(q));
+  const d = await r.json();
+  const box = document.getElementById("oracleBox");
+  box.style.display = "block";
+  document.getElementById("oracleRitual").textContent = d.ritual;
+  document.getElementById("oracleMsg").textContent = d.message;
+  toast("🔮 L'Oracolo ha parlato!", "#8E44AD");
+}
+async function spinSlot() {
+  const btn = document.querySelector(".btn-gold");
+  btn.disabled = true; btn.textContent = "🎲 Girando…";
+  const items = ["🍝","🍕","🌭","🧆","🥙","🍖","🥗","🍔","🌮","🍛","🍣","🥩","🥘","🫕","🍱"];
+  let frames = 0;
+  const anim = setInterval(() => {
+    ["r1","r2","r3"].forEach(id => document.getElementById(id).textContent = items[Math.floor(Math.random()*items.length)]);
+    if (++frames > 15) clearInterval(anim);
+  }, 80);
+  setTimeout(async () => {
+    const r = await fetch("/lunch/spin");
+    const d = await r.json();
+    ["r1","r2","r3"].forEach((id,i) => document.getElementById(id).textContent = d.reels[i]);
+    document.getElementById("spinResult").textContent = d.message;
+    document.getElementById("spinResult").style.color = d.win ? "var(--gold)" : "var(--red)";
+    if (d.win) toast("🎰🎰🎰 JACKPOT! " + d.dish, "var(--gold)");
+    btn.disabled = false; btn.textContent = "🎰 GIRA LA RUOTA!";
+  }, 1400);
+}
+async function submitComplaint() {
+  const text = document.getElementById("complaintText").value.trim();
+  if (!text) { toast("La tua lamentela è vuota. Anche questo è un reclamo.", "var(--red)"); return; }
+  const r = await fetch("/lunch/complaint?text=" + encodeURIComponent(text));
+  const d = await r.json();
+  document.getElementById("complaintText").value = "";
+  state.complaints.push({ text, time: new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}), response: d.response });
+  render();
+  toast(d.response, "var(--brown)");
+}
+async function markTip(id) {
+  const r = await fetch("/lunch/training?tip_id=" + id);
+  const d = await r.json();
+  document.getElementById("trainScore").textContent = d.score;
+  toast("🎓 " + d.message);
+}
+loadState();
+setInterval(loadState, 30000);
 </script>
 </body>
 </html>
