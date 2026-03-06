@@ -1,0 +1,17 @@
+# fly.io config — run: fly launch (then fly deploy)
+app = "the-meatball"
+primary_region = "ams"
+
+[build]
+  [build.args]
+    PYTHON_VERSION = "3.11"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+
+[env]
+  HOST = "0.0.0.0"
+  PORT = "8080"
