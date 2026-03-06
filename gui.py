@@ -100,24 +100,19 @@ LUNCH_HTML = """<!DOCTYPE html>
 <title>🥙 THE MEATBALL</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-  :root {
-    --bg:#1A2A1A;--bg-card:#243524;--green:#4CAF50;--lime:#8BC34A;
-    --yellow:#FFC107;--red:#F44336;--cream:#F5F0E8;--muted:#8A9E8A;
-    --border:#3A5A3A;--sauce:#C0392B;--cheese:#F5CBA7;--gold:#FFD700;
-  }
+  :root{--bg:#1A2A1A;--bg-card:#243524;--green:#4CAF50;--lime:#8BC34A;--yellow:#FFC107;--red:#F44336;--cream:#F5F0E8;--muted:#8A9E8A;--border:#3A5A3A;--sauce:#C0392B;--gold:#FFD700;--purple:#9B59B6;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--cream);font-family:'Courier Prime','Courier New',monospace;min-height:100vh;padding-bottom:40px;}
   header{background:#2D4A2D;border-bottom:2px solid var(--green);padding:14px 20px;display:flex;align-items:center;gap:16px;}
   header h1{font-size:1.4rem;color:var(--lime);}
   header p{font-size:0.72rem;color:var(--muted);margin-top:2px;}
-  .nav-link{margin-left:auto;color:var(--muted);text-decoration:none;font-size:0.82rem;border:1px solid var(--border);padding:5px 10px;border-radius:4px;transition:color .2s;}
+  .nav-link{margin-left:auto;color:var(--muted);text-decoration:none;font-size:0.82rem;border:1px solid var(--border);padding:5px 10px;border-radius:4px;}
   .nav-link:hover{color:var(--lime);border-color:var(--lime);}
   .grid{display:grid;gap:12px;padding:12px 14px;max-width:1100px;margin:0 auto;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));}
   .card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
   .card.wide{grid-column:span 2;}
   .card-header{background:#2D4A2D;padding:9px 13px;font-size:0.88rem;font-weight:bold;color:var(--lime);display:flex;align-items:center;gap:8px;}
   .card-body{padding:13px;}
-  /* Luncher */
   .big-num{text-align:center;font-size:3rem;font-weight:bold;color:var(--lime);margin:8px 0 2px;}
   .sub{text-align:center;font-size:0.76rem;color:var(--muted);margin-bottom:12px;}
   .btn-row{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;}
@@ -127,21 +122,21 @@ LUNCH_HTML = """<!DOCTYPE html>
   .btn.ok:hover{background:var(--lime);}
   .btn.bad{background:var(--sauce);color:var(--cream);}
   .btn.bad:hover{background:#e74c3c;}
+  .btn.gold{background:var(--gold);color:#000;font-weight:bold;}
+  .btn.purple{background:var(--purple);color:#fff;font-weight:bold;}
   /* Agenda */
   .agenda-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-top:6px;}
   .agenda-table th{color:var(--muted);padding:4px 6px;text-align:center;border-bottom:1px solid var(--border);}
   .agenda-table td{padding:5px 6px;text-align:center;border-bottom:1px solid #1A2A1A;}
   .agenda-table td:first-child{text-align:left;color:var(--cream);font-weight:bold;}
   .day-check{cursor:pointer;font-size:1.1rem;}
-  .today-col{background:rgba(139,195,74,0.1);border-left:2px solid var(--lime);border-right:2px solid var(--lime);}
+  .today-col{background:rgba(139,195,74,0.1);}
   /* Budget */
   .brow{display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.84rem;}
   .bar-bg{width:100%;height:11px;background:#1A2A1A;border-radius:5px;overflow:hidden;margin-bottom:7px;}
   .bar{height:100%;border-radius:5px;transition:width .4s;}
-  /* SpaarBall */
   .spaarball{background:#1A2A1A;border-radius:6px;padding:10px 12px;margin-top:8px;text-align:center;}
   .spaarball .euro{font-size:2rem;color:var(--gold);}
-  .spaarball .label{font-size:0.72rem;color:var(--muted);margin-top:3px;}
   /* Inventory */
   .inv-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
   .inv-item:last-child{border-bottom:none;}
@@ -151,27 +146,56 @@ LUNCH_HTML = """<!DOCTYPE html>
   .inv-unit{color:var(--muted);font-size:0.72rem;min-width:26px;}
   .inv-low{color:var(--red);}
   .inv-ok{color:var(--green);}
-  /* Picnic list */
+  /* Picnic */
   .picnic-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
   .picnic-item:last-child{border-bottom:none;}
   /* Poll */
   .poll-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;cursor:pointer;transition:background .12s;}
-  .poll-item:hover{background:#1A2A1A;border-radius:4px;}
+  .poll-item:hover{background:#1A2A1A;border-radius:4px;padding-left:4px;}
   .poll-item:last-child{border-bottom:none;}
   .poll-bar-bg{flex:1;height:8px;background:#1A2A1A;border-radius:4px;overflow:hidden;}
   .poll-bar{height:100%;background:var(--green);border-radius:4px;transition:width .4s;}
   .poll-votes{font-size:0.72rem;color:var(--muted);min-width:28px;text-align:right;}
-  .poll-winner{color:var(--gold)!important;}
   /* Training */
   .tip-card{background:#1A2A1A;border-radius:5px;padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:background .14s;display:flex;align-items:flex-start;gap:8px;}
   .tip-card:hover{background:#2D4A2D;}
-  .score-box{text-align:center;font-size:1.6rem;font-weight:bold;color:var(--yellow);margin-bottom:10px;}
+  /* Product Requests */
+  .req-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
+  .req-item:last-child{border-bottom:none;}
+  .req-status{font-size:0.7rem;margin-left:auto;white-space:nowrap;}
+  /* Mood */
+  .mood-btn{font-size:1.4rem;cursor:pointer;padding:4px 8px;border-radius:4px;border:2px solid transparent;transition:border-color .15s;}
+  .mood-btn:hover,.mood-btn.active{border-color:var(--lime);}
+  .mood-avg{text-align:center;font-size:2.5rem;margin:8px 0 4px;}
+  /* Oracle */
+  .oracle-box{background:#1A2A1A;border-radius:8px;padding:14px;text-align:center;margin-top:10px;min-height:60px;}
+  .oracle-ritual{font-size:0.75rem;color:var(--muted);font-style:italic;margin-bottom:6px;}
+  .oracle-msg{font-size:0.9rem;color:var(--purple);font-weight:bold;}
+  /* Slot machine */
+  .reels{display:flex;justify-content:center;gap:12px;font-size:3rem;margin:10px 0;background:#1A2A1A;padding:12px;border-radius:8px;}
+  .reel{transition:transform .3s;}
+  .spin-result{text-align:center;font-size:0.88rem;color:var(--yellow);font-weight:bold;min-height:20px;}
+  /* Complaints */
+  .complaint-item{padding:7px 0;border-bottom:1px solid var(--border);font-size:0.8rem;}
+  .complaint-item:last-child{border-bottom:none;}
+  .complaint-response{font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:3px;}
+  /* Leaderboard */
+  .lb-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+  .lb-item:last-child{border-bottom:none;}
+  .lb-rank{font-size:1.2rem;width:28px;}
+  /* Input */
+  .inp{background:#1A2A1A;border:1px solid var(--border);border-radius:4px;color:var(--cream);font-family:inherit;font-size:0.85rem;padding:7px 10px;width:100%;outline:none;}
+  .inp:focus{border-color:var(--lime);}
+  /* Nonna alert */
+  .nonna-alert{border-radius:6px;padding:10px 12px;margin-bottom:10px;font-size:0.85rem;font-weight:bold;}
   /* Toast */
   #toast{position:fixed;bottom:18px;right:18px;background:var(--green);color:#000;padding:9px 14px;border-radius:6px;font-size:0.83rem;font-family:inherit;display:none;z-index:999;max-width:280px;}
   .msg{font-size:0.76rem;color:var(--lime);margin-top:7px;min-height:16px;}
   .badge{font-size:0.68rem;color:var(--muted);background:#1A2A1A;padding:2px 5px;border-radius:3px;margin-left:auto;}
   .picnic-link{display:inline-block;margin-top:8px;color:var(--lime);font-size:0.8rem;text-decoration:none;border:1px solid var(--border);padding:5px 10px;border-radius:4px;}
   .picnic-link:hover{border-color:var(--lime);}
+  @keyframes slot-spin{0%{transform:translateY(-20px);opacity:0}100%{transform:translateY(0);opacity:1}}
+  .reel.spinning{animation:slot-spin .3s ease-out;}
 </style>
 </head>
 <body>
@@ -179,7 +203,6 @@ LUNCH_HTML = """<!DOCTYPE html>
   <div><h1>🥙 THE MEATBALL</h1><p>Super Modern Lunch Dashboard voor de Lunch</p></div>
   <a class="nav-link" href="/">← Weer</a>
 </header>
-
 <div class="grid">
 
   <!-- Luncher Counter -->
@@ -202,32 +225,56 @@ LUNCH_HTML = """<!DOCTYPE html>
   <div class="card">
     <div class="card-header">💶 Budget (€120 cap)</div>
     <div class="card-body">
+      <div id="nonnalert"></div>
       <div class="brow"><span>Uitgegeven</span><span id="budSpent">€--</span></div>
       <div class="brow"><span>Cap</span><span id="budCap">€--</span></div>
       <div class="bar-bg"><div class="bar" id="budBar" style="width:0%"></div></div>
       <div class="brow" style="font-weight:bold"><span>Resterend</span><span id="budRem">€--</span></div>
-      <div class="msg" id="budStatus"></div>
       <div class="spaarball">
-        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px">🏦 SpaarBall — <em>budget over gaat naar de SpaarBall</em></div>
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:4px">🏦 SpaarBall — budget over gaat hierheen</div>
         <div class="euro" id="spaarbBal">€--</div>
-        <div class="label" id="spaarbEarn">SpaarPlan Biertafels · 1,23% · +€-- dit jaar</div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-top:3px" id="spaarbEarn">SpaarPlan Biertafels · 1,23%</div>
       </div>
     </div>
   </div>
 
   <!-- Agenda -->
   <div class="card wide">
-    <div class="card-header">📅 Lunch Agenda (wie is er wanneer?)</div>
+    <div class="card-header">📅 Lunch Agenda</div>
     <div class="card-body">
-      <table class="agenda-table" id="agendaTable">
-        <thead><tr>
-          <th>Naam</th>
-          <th id="th-MA">MA</th><th id="th-DI">DI</th><th id="th-WO">WO</th>
-          <th id="th-DO">DO</th><th id="th-VR">VR</th>
-        </tr></thead>
+      <table class="agenda-table">
+        <thead><tr><th>Naam</th><th id="th-MA">MA</th><th id="th-DI">DI</th><th id="th-WO">WO</th><th id="th-DO">DO</th><th id="th-VR">VR</th></tr></thead>
         <tbody id="agendaBody"></tbody>
       </table>
       <div class="msg" id="agendaMsg"></div>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="card">
+    <div class="card-header">🏆 Lunch Leaderboard</div>
+    <div class="card-body">
+      <div id="leaderboard">Laden…</div>
+    </div>
+  </div>
+
+  <!-- Sfeer-o-meter -->
+  <div class="card">
+    <div class="card-header">🌡️ Sfeer-o-meter</div>
+    <div class="card-body">
+      <div class="mood-avg" id="moodAvgEmoji">🤔</div>
+      <div style="text-align:center;font-size:0.85rem;color:var(--muted);margin-bottom:12px" id="moodAvgLabel">Nog geen stemmen</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:6px">Jouw naam:</div>
+      <input class="inp" id="moodName" placeholder="Naam..." style="margin-bottom:8px">
+      <div class="btn-row">
+        <span class="mood-btn" onclick="voteMood(1)" title="Vreselijk">💀</span>
+        <span class="mood-btn" onclick="voteMood(2)" title="Slecht">😞</span>
+        <span class="mood-btn" onclick="voteMood(3)" title="Meh">😐</span>
+        <span class="mood-btn" onclick="voteMood(4)" title="Goed">😊</span>
+        <span class="mood-btn" onclick="voteMood(5)" title="GEWELDIG">🔥</span>
+      </div>
+      <div id="moodVotes" style="margin-top:10px;font-size:0.78rem;color:var(--muted)"></div>
+      <div class="msg" id="moodMsg"></div>
     </div>
   </div>
 
@@ -236,9 +283,7 @@ LUNCH_HTML = """<!DOCTYPE html>
     <div class="card-header">📦 Voorraad</div>
     <div class="card-body">
       <div id="invList">Laden…</div>
-      <div style="margin-top:9px;display:flex;gap:7px;flex-wrap:wrap">
-        <button class="btn ok" onclick="scanInv()">📸 Scan voorraadla</button>
-      </div>
+      <button class="btn ok" style="margin-top:9px;width:100%" onclick="scanInv()">📸 Scan voorraadla</button>
       <div class="msg" id="invMsg"></div>
     </div>
   </div>
@@ -247,236 +292,203 @@ LUNCH_HTML = """<!DOCTYPE html>
   <div class="card">
     <div class="card-header">🛒 Picnic Lijst</div>
     <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Lijst op basis van voorraad — klik om te bestellen</div>
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Automatisch op basis van lage voorraad</div>
       <div id="picnicList">Laden…</div>
-      <button class="btn bad" style="margin-top:9px" onclick="orderPicnic()">🛒 Bestel via Picnic</button>
+      <button class="btn bad" style="margin-top:9px;width:100%" onclick="orderPicnic()">🛒 Bestel via Picnic</button>
       <a class="picnic-link" id="picnicCartLink" href="https://picnic.app" target="_blank" style="display:none">🔗 Open winkelmandje →</a>
       <div class="msg" id="picnicMsg"></div>
     </div>
   </div>
 
-  <!-- Suggestion Poll (VORM POLL) -->
+  <!-- Product Requests -->
   <div class="card">
-    <div class="card-header">💡 Lunch Suggestie — VORM POLL</div>
+    <div class="card-header">🛍️ Product Requests</div>
     <div class="card-body">
-      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Klik op een gerecht om te stemmen</div>
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Vraag een product aan — 3 stemmen = goedgekeurd!</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <input class="inp" id="reqName" placeholder="Product naam...">
+        <input class="inp" id="reqWho" placeholder="Jouw naam" style="max-width:100px">
+      </div>
+      <button class="btn ok" onclick="submitRequest()" style="width:100%;margin-bottom:10px">➕ Aanvragen</button>
+      <div id="reqList" style="font-size:0.82rem">Geen requests</div>
+      <div class="msg" id="reqMsg"></div>
+    </div>
+  </div>
+
+  <!-- Suggestion Poll -->
+  <div class="card">
+    <div class="card-header">💡 Lunch Poll — VORM POLL</div>
+    <div class="card-body">
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Klik om te stemmen 👇</div>
       <div id="pollList">Laden…</div>
+    </div>
+  </div>
+
+  <!-- Slot Machine 🎰 -->
+  <div class="card">
+    <div class="card-header">🎰 Wat Eten We? (Slot Machine)</div>
+    <div class="card-body">
+      <div class="reels" id="reels"><span id="r1">🍝</span><span id="r2">🍖</span><span id="r3">🍅</span></div>
+      <div class="spin-result" id="spinResult">Druk op de knop om het lot te vragen</div>
+      <button class="btn gold" style="width:100%;margin-top:10px;font-size:1rem" onclick="spinSlot()">🎰 DRAAIEN!</button>
+    </div>
+  </div>
+
+  <!-- Meatball Oracle -->
+  <div class="card">
+    <div class="card-header">🔮 Meatball Oracle</div>
+    <div class="card-body">
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Stel de Oracle een ja/nee vraag</div>
+      <input class="inp" id="oracleQ" placeholder="Bijv: Mogen we pizza bestellen?" style="margin-bottom:8px">
+      <button class="btn purple" style="width:100%" onclick="askOracle()">🔮 Vraag de Oracle</button>
+      <div class="oracle-box" id="oracleBox" style="display:none">
+        <div class="oracle-ritual" id="oracleRitual"></div>
+        <div class="oracle-msg" id="oracleMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complaint Box -->
+  <div class="card">
+    <div class="card-header">😤 Klachtenbus (anoniem)</div>
+    <div class="card-body">
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Klaag hier. Niemand ziet het. (Behalve iedereen.)</div>
+      <textarea class="inp" id="complaintText" rows="2" placeholder="Jouw klacht..." style="resize:none;margin-bottom:8px"></textarea>
+      <button class="btn bad" style="width:100%;margin-bottom:10px" onclick="submitComplaint()">😤 Indienen</button>
+      <div id="complaintList" style="font-size:0.8rem">Nog geen klachten. Indrukwekkend.</div>
     </div>
   </div>
 
   <!-- Order History -->
   <div class="card">
     <div class="card-header">📋 Bestelhistorie</div>
-    <div class="card-body">
-      <div id="orderHist" style="font-size:0.8rem;color:var(--muted)">Geen bestellingen</div>
-    </div>
+    <div class="card-body"><div id="orderHist" style="font-size:0.8rem;color:var(--muted)">Geen bestellingen</div></div>
   </div>
 
   <!-- Training Tool -->
   <div class="card">
     <div class="card-header">🎓 Training Tool</div>
     <div class="card-body">
-      <div class="score-box">⭐ <span id="trainScore">0</span> pts</div>
+      <div style="text-align:center;font-size:1.6rem;font-weight:bold;color:var(--yellow);margin-bottom:10px">⭐ <span id="trainScore">0</span> pts</div>
       <div id="trainTips">Laden…</div>
     </div>
   </div>
 
 </div>
 <div id="toast"></div>
-
 <script>
 let state = {};
-
-function toast(msg, col) {
-  const el = document.getElementById("toast");
-  el.textContent = msg; el.style.background = col || "var(--green)";
-  el.style.display = "block";
-  setTimeout(() => el.style.display = "none", 3000);
-}
-function msg(id, txt, ms) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = txt;
-  if (ms) setTimeout(() => { if (el.textContent === txt) el.textContent = ""; }, ms);
-}
-
-async function loadState() {
-  const r = await fetch("/lunch/state");
-  state = await r.json();
-  render();
-}
-
-function render() {
-  // Luncher
-  document.getElementById("luncherCount").textContent = state.lunchers;
-  document.getElementById("weekBadge").textContent    = "week " + state.week;
-
+function toast(msg,col){const el=document.getElementById("toast");el.textContent=msg;el.style.background=col||"var(--green)";el.style.display="block";setTimeout(()=>el.style.display="none",3500);}
+function msg(id,txt,ms){const el=document.getElementById(id);if(!el)return;el.textContent=txt;if(ms)setTimeout(()=>{if(el.textContent===txt)el.textContent="";},ms);}
+async function loadState(){const r=await fetch("/lunch/state");state=await r.json();render();}
+function render(){
+  document.getElementById("luncherCount").textContent=state.lunchers;
+  document.getElementById("weekBadge").textContent="week "+state.week;
+  // Nonna alert
+  const na=state.budget.nonna_alert;
+  const nael=document.getElementById("nonnalert");
+  if(na){nael.innerHTML=`<div class="nonna-alert" style="background:${na.color}20;border-left:3px solid ${na.color};color:${na.color}">${na.level}<br><span style="font-weight:normal;font-size:0.8rem">${na.msg}</span></div>`;}
+  else{nael.innerHTML="";}
   // Budget
-  const b = state.budget;
-  document.getElementById("budSpent").textContent  = "€" + b.spent.toFixed(2);
-  document.getElementById("budCap").textContent    = "€" + b.cap.toFixed(2);
-  document.getElementById("budRem").textContent    = "€" + b.remaining.toFixed(2);
-  document.getElementById("budStatus").textContent = b.status;
-  const bar = document.getElementById("budBar");
-  bar.style.width      = Math.min(b.pct_used, 100) + "%";
-  bar.style.background = b.pct_used >= 80 ? "var(--red)" : b.pct_used >= 60 ? "var(--yellow)" : "var(--green)";
-  document.getElementById("spaarbBal").textContent  = "€" + b.spaarball.toFixed(2);
-  document.getElementById("spaarbEarn").textContent = "SpaarPlan Biertafels · " + b.spaarball_pct + "% · +€" + b.spaarball_earn.toFixed(2) + " dit jaar";
-
+  const b=state.budget;
+  document.getElementById("budSpent").textContent="€"+b.spent.toFixed(2);
+  document.getElementById("budCap").textContent="€"+b.cap.toFixed(2);
+  document.getElementById("budRem").textContent="€"+b.remaining.toFixed(2);
+  const bar=document.getElementById("budBar");
+  bar.style.width=Math.min(b.pct_used,100)+"%";
+  bar.style.background=b.pct_used>=80?"var(--red)":b.pct_used>=60?"var(--yellow)":"var(--green)";
+  document.getElementById("spaarbBal").textContent="€"+b.spaarball.toFixed(2);
+  document.getElementById("spaarbEarn").textContent="SpaarPlan Biertafels · "+b.spaarball_pct+"% · +€"+b.spaarball_earn.toFixed(2)+" dit jaar";
   // Agenda
-  const tbody = document.getElementById("agendaBody");
-  const days  = state.weekdays;
-  // highlight today
-  days.forEach(d => {
-    const th = document.getElementById("th-" + d);
-    if (th) th.style.color = d === state.today ? "var(--lime)" : "";
-  });
-  tbody.innerHTML = Object.entries(state.agenda).map(([name, schedule]) =>
-    `<tr>
-      <td>${name}</td>
-      ${days.map(d => {
-        const on = schedule[d];
-        const today = d === state.today;
-        return `<td class="${today ? 'today-col' : ''}">
-          <span class="day-check" onclick="toggleAgenda('${name}','${d}')" title="${name} op ${d}">${on ? "✅" : "❌"}</span>
-        </td>`;
-      }).join("")}
-     </tr>`
+  const tbody=document.getElementById("agendaBody");
+  const days=state.weekdays;
+  days.forEach(d=>{const th=document.getElementById("th-"+d);if(th)th.style.color=d===state.today?"var(--lime)":"";});
+  tbody.innerHTML=Object.entries(state.agenda).map(([name,sched])=>
+    `<tr><td>${name}</td>${days.map(d=>`<td class="${d===state.today?'today-col':''}">`+
+    `<span class="day-check" onclick="toggleAgenda('${name}','${d}')">${sched[d]?"✅":"❌"}</span></td>`).join("")}</tr>`
   ).join("");
-
+  // Leaderboard
+  document.getElementById("leaderboard").innerHTML=state.leaderboard.map((p,i)=>{
+    const medals=["🥇","🥈","🥉"];
+    return `<div class="lb-item"><span class="lb-rank">${medals[i]||"👤"}</span><span style="flex:1">${p.name}</span><span style="color:var(--lime);font-weight:bold">${p.days} dagen</span></div>`;
+  }).join("");
+  // Mood
+  const m=state.mood;
+  document.getElementById("moodAvgEmoji").textContent=m.emoji||"🤔";
+  document.getElementById("moodAvgLabel").textContent=m.avg?m.avg+" / 5 — "+m.label:"Nog geen stemmen";
+  document.getElementById("moodVotes").innerHTML=Object.entries(m.votes||{}).map(([k,v])=>
+    `<span style="margin-right:8px">${v.emoji} <b>${k}</b></span>`).join("");
   // Inventory
-  document.getElementById("invList").innerHTML = state.inventory.map(i => {
-    const low = i.qty < i.min;
-    return `<div class="inv-item">
-      <span class="inv-emoji">${i.emoji}</span>
-      <span class="inv-name">${i.name}</span>
-      <span class="inv-qty ${low ? 'inv-low' : 'inv-ok'}">${i.qty}</span>
-      <span class="inv-unit">${i.unit}</span>
-      ${low ? '<span style="font-size:0.7rem;color:var(--red)">⚠️</span>' : ''}
-    </div>`;
+  document.getElementById("invList").innerHTML=state.inventory.map(i=>{
+    const low=i.qty<i.min;
+    return `<div class="inv-item"><span class="inv-emoji">${i.emoji}</span><span class="inv-name">${i.name}</span>`+
+      `<span class="inv-qty ${low?'inv-low':'inv-ok'}">${i.qty}</span><span class="inv-unit">${i.unit}</span>`+
+      `${low?'<span style="font-size:0.7rem;color:var(--red)">⚠️</span>':''}</div>`;
   }).join("");
-
   // Picnic list
-  const pl = document.getElementById("picnicList");
-  if (!state.picnic_list || state.picnic_list.length === 0) {
-    pl.innerHTML = '<div style="color:var(--green);font-size:0.82rem">✅ Voorraad is prima — niets te bestellen</div>';
-  } else {
-    pl.innerHTML = state.picnic_list.map(i =>
-      `<div class="picnic-item">
-        <span>${i.emoji}</span>
-        <span style="flex:1">${i.name}</span>
-        <span style="color:var(--yellow);font-size:0.8rem">+${i.needed} ${i.unit}</span>
-       </div>`
-    ).join("");
-  }
-
+  const pl=document.getElementById("picnicList");
+  pl.innerHTML=!state.picnic_list||state.picnic_list.length===0
+    ?'<div style="color:var(--green);font-size:0.82rem">✅ Voorraad prima</div>'
+    :state.picnic_list.map(i=>`<div class="picnic-item"><span>${i.emoji}</span><span style="flex:1">${i.name}</span><span style="color:var(--yellow);font-size:0.8rem">+${i.needed} ${i.unit}</span></div>`).join("");
+  // Product requests
+  const rl=document.getElementById("reqList");
+  rl.innerHTML=!state.product_requests||state.product_requests.length===0
+    ?'<span style="color:var(--muted)">Geen requests</span>'
+    :state.product_requests.map(r=>`<div class="req-item">`+
+      `<span style="font-size:1.1rem">${r.emoji}</span>`+
+      `<span style="flex:1"><b>${r.name}</b> <span style="color:var(--muted);font-size:0.75rem">— ${r.requester}</span></span>`+
+      `<span style="cursor:pointer;margin-right:4px" onclick="voteRequest(${r.id})" title="Stem">👍 ${r.votes}</span>`+
+      `<span class="req-status">${r.status}</span>`+
+      `</div>`).join("");
   // Poll
-  const poll = state.suggestion.poll || [];
-  const maxV = Math.max(...poll.map(p => p.votes), 1);
-  const winner = poll.reduce((a,b) => b.votes > a.votes ? b : a, poll[0] || {});
-  document.getElementById("pollList").innerHTML = poll.map(p => {
-    const pct = Math.round((p.votes / maxV) * 100);
-    const isWinner = p.votes > 0 && p.dish === winner.dish;
-    return `<div class="poll-item" onclick="votePoll('${p.dish.replace(/'/g, "\'")}')">
-      <span>${p.emoji}</span>
-      <span style="flex:0 0 130px;font-size:0.8rem;${isWinner ? 'color:var(--gold);font-weight:bold' : ''}">${p.dish}</span>
-      <div class="poll-bar-bg"><div class="poll-bar" style="width:${pct}%;${isWinner ? 'background:var(--gold)' : ''}"></div></div>
-      <span class="poll-votes ${isWinner ? 'poll-winner' : ''}">${p.votes}</span>
-    </div>`;
+  const poll=state.suggestion.poll||[];
+  const maxV=Math.max(...poll.map(p=>p.votes),1);
+  const winner=poll.reduce((a,b)=>b.votes>a.votes?b:a,poll[0]||{});
+  document.getElementById("pollList").innerHTML=poll.map(p=>{
+    const pct=Math.round((p.votes/maxV)*100);
+    const isW=p.votes>0&&p.dish===winner.dish;
+    return `<div class="poll-item" onclick="votePoll('${p.dish.replace(/'/g,"\\'")}')"><span>${p.emoji}</span>`+
+      `<span style="flex:0 0 130px;font-size:0.8rem;${isW?'color:var(--gold);font-weight:bold':''}">${p.dish}</span>`+
+      `<div class="poll-bar-bg"><div class="poll-bar" style="width:${pct}%;${isW?'background:var(--gold)':''}"></div></div>`+
+      `<span class="poll-votes ${isW?'':'poll-votes'}">${p.votes}</span></div>`;
   }).join("");
-
   // Order history
-  const oh = document.getElementById("orderHist");
-  if (!state.order_history || state.order_history.length === 0) {
-    oh.textContent = "Geen bestellingen";
-  } else {
-    oh.innerHTML = state.order_history.slice().reverse().map(o =>
-      `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
-        <span style="color:var(--lime)">${o.time}</span> — ${o.items.join(", ")}
-        <span style="color:var(--yellow);float:right">€${o.cost.toFixed(2)}</span>
-       </div>`
+  const oh=document.getElementById("orderHist");
+  oh.innerHTML=!state.order_history||state.order_history.length===0?'Geen bestellingen'
+    :state.order_history.slice().reverse().map(o=>`<div style="padding:4px 0;border-bottom:1px solid var(--border)">`+
+      `<span style="color:var(--lime)">${o.time}</span> — ${o.items.join(", ")}<span style="color:var(--yellow);float:right">€${o.cost.toFixed(2)}</span></div>`
     ).join("");
-  }
-
+  // Complaints
+  document.getElementById("complaintList").innerHTML=!state.complaints||state.complaints.length===0
+    ?'Nog geen klachten. Indrukwekkend.'
+    :state.complaints.slice().reverse().map(c=>`<div class="complaint-item">`+
+      `<span style="color:var(--muted);font-size:0.7rem">${c.time}</span> ${c.text}`+
+      `<div class="complaint-response">${c.response}</div></div>`).join("");
   // Training
-  document.getElementById("trainScore").textContent = state.training_score;
-  document.getElementById("trainTips").innerHTML = state.training_tips.map(t =>
-    `<div class="tip-card" onclick="markTip(${t.id})">
-      <span style="font-size:1.2rem">${t.emoji}</span>
-      <span style="font-size:0.82rem">${t.tip}</span>
-     </div>`
+  document.getElementById("trainScore").textContent=state.training_score;
+  document.getElementById("trainTips").innerHTML=state.training_tips.map(t=>
+    `<div class="tip-card" onclick="markTip(${t.id})"><span style="font-size:1.2rem">${t.emoji}</span><span style="font-size:0.82rem">${t.tip}</span></div>`
   ).join("");
 }
-
-async function chgLunch(delta) {
-  const n = (state.lunchers||0) + delta;
-  const r = await fetch("/lunch/lunchers?n=" + n);
-  const d = await r.json();
-  state.lunchers = d.lunchers;
-  document.getElementById("luncherCount").textContent = d.lunchers;
-  msg("lunchMsg", "👥 " + d.lunchers + " lunchers", 2000);
-}
-
-async function toggleAgenda(person, day) {
-  const r = await fetch("/lunch/agenda?person=" + encodeURIComponent(person) + "&day=" + day);
-  const d = await r.json();
-  state.agenda = d.agenda;
-  render();
-  msg("agendaMsg", person + " op " + day + " bijgewerkt", 2000);
-}
-
-async function votePoll(dish) {
-  const r = await fetch("/lunch/vote?dish=" + encodeURIComponent(dish));
-  const d = await r.json();
-  // update local poll votes
-  const item = state.suggestion.poll.find(p => p.dish === dish);
-  if (item) item.votes = d.votes;
-  render();
-  toast("👍 Gestemd op " + dish + "!");
-}
-
-async function scanInv() {
-  msg("invMsg", "📸 Scanning…");
-  const r = await fetch("/lunch/scan");
-  const d = await r.json();
-  state.inventory = d.inventory;
-  render();
-  msg("invMsg", d.message, 3000);
-  toast(d.message);
-}
-
-async function orderPicnic() {
-  msg("picnicMsg", "🛒 Bestelling plaatsen…");
-  const r = await fetch("/lunch/order");
-  const d = await r.json();
-  if (d.ok) {
-    toast(d.message, "var(--sauce)");
-    if (d.picnic_url) {
-      const lnk = document.getElementById("picnicCartLink");
-      lnk.href = d.picnic_url; lnk.style.display = "inline-block";
-    }
-    await loadState();
-  } else {
-    toast("✅ " + d.message, "var(--green)");
-  }
-  msg("picnicMsg", d.message, 4000);
-}
-
-async function markTip(tipId) {
-  const r = await fetch("/lunch/training?tip_id=" + tipId);
-  const d = await r.json();
-  document.getElementById("trainScore").textContent = d.score;
-  toast("🎓 " + d.message);
-}
-
-loadState();
-setInterval(loadState, 30000);
+async function chgLunch(d){const n=(state.lunchers||0)+d;const r=await fetch("/lunch/lunchers?n="+n);const x=await r.json();state.lunchers=x.lunchers;document.getElementById("luncherCount").textContent=x.lunchers;msg("lunchMsg","👥 "+x.lunchers+" lunchers",2000);}
+async function toggleAgenda(person,day){const r=await fetch("/lunch/agenda?person="+encodeURIComponent(person)+"&day="+day);const d=await r.json();state.agenda=d.agenda;render();msg("agendaMsg",person+" op "+day+" bijgewerkt",2000);}
+async function votePoll(dish){const r=await fetch("/lunch/vote?dish="+encodeURIComponent(dish));const d=await r.json();const item=state.suggestion.poll.find(p=>p.dish===dish);if(item)item.votes=d.votes;render();toast("👍 Gestemd op "+dish+"!");}
+async function scanInv(){msg("invMsg","📸 Scanning...");const r=await fetch("/lunch/scan");const d=await r.json();state.inventory=d.inventory;render();msg("invMsg",d.message,3000);toast(d.message);}
+async function orderPicnic(){msg("picnicMsg","🛒 Bestellen...");const r=await fetch("/lunch/order");const d=await r.json();if(d.ok){toast(d.message,"var(--sauce)");if(d.picnic_url){const lnk=document.getElementById("picnicCartLink");lnk.href=d.picnic_url;lnk.style.display="inline-block";}await loadState();}else{toast("✅ "+d.message,"var(--green)");}msg("picnicMsg",d.message,4000);}
+async function submitRequest(){const name=document.getElementById("reqName").value.trim();const who=document.getElementById("reqWho").value.trim();if(!name){toast("Geef een productnaam in!","var(--sauce)");return;}const r=await fetch("/lunch/request?name="+encodeURIComponent(name)+"&who="+encodeURIComponent(who));const d=await r.json();if(d.ok){state.product_requests.push(d.request);document.getElementById("reqName").value="";render();toast("✅ Request ingediend: "+name);}msg("reqMsg","",0);}
+async function voteRequest(id){const r=await fetch("/lunch/request/vote?id="+id);const d=await r.json();if(d.ok){const req=state.product_requests.find(x=>x.id===id);if(req){req.votes=d.votes;req.status=d.status;}render();toast("👍 Gestemd! ("+d.votes+" stemmen)");}}
+async function voteMood(score){const person=document.getElementById("moodName").value.trim()||"Anoniem";const r=await fetch("/lunch/mood?person="+encodeURIComponent(person)+"&score="+score);const d=await r.json();state.mood=d.mood;render();toast(d.emoji+" Sfeer geregistreerd: "+d.label);}
+async function askOracle(){const q=document.getElementById("oracleQ").value.trim()||"Wat is het antwoord?";const r=await fetch("/lunch/oracle?q="+encodeURIComponent(q));const d=await r.json();const box=document.getElementById("oracleBox");box.style.display="block";document.getElementById("oracleRitual").textContent=d.ritual;document.getElementById("oracleMsg").textContent=d.message;toast("🔮 De Oracle heeft gesproken!","var(--purple)");}
+async function spinSlot(){const btn=document.querySelector(".btn.gold");btn.disabled=true;btn.textContent="🎲 Draaien...";// Animate reels
+const items=["🍝","🍕","🌭","🧆","🥙","🍖","🥗","🍔","🌮","🍛","🍣","🥩","🥘","🫕","🍱"];let frames=0;const anim=setInterval(()=>{["r1","r2","r3"].forEach(id=>document.getElementById(id).textContent=items[Math.floor(Math.random()*items.length)]);if(++frames>15)clearInterval(anim);},80);
+setTimeout(async()=>{const r=await fetch("/lunch/spin");const d=await r.json();document.getElementById("r1").textContent=d.reels[0];document.getElementById("r2").textContent=d.reels[1];document.getElementById("r3").textContent=d.reels[2];document.getElementById("spinResult").textContent=d.message;if(d.win){document.getElementById("spinResult").style.color="var(--gold)";toast("🎰🎰🎰 JACKPOT!!!","var(--gold)");}else{document.getElementById("spinResult").style.color="var(--yellow)";}btn.disabled=false;btn.textContent="🎰 DRAAIEN!";},1400);}
+async function submitComplaint(){const text=document.getElementById("complaintText").value.trim();if(!text){toast("Je klacht is leeg. Dat is ook een klacht, eigenlijk.","var(--sauce)");return;}const r=await fetch("/lunch/complaint?text="+encodeURIComponent(text));const d=await r.json();document.getElementById("complaintText").value="";state.complaints.push({text,time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}),response:d.response});render();toast(d.response,"#333");}
+async function markTip(id){const r=await fetch("/lunch/training?tip_id="+id);const d=await r.json();document.getElementById("trainScore").textContent=d.score;toast("🎓 "+d.message);}
+loadState();setInterval(loadState,30000);
 </script>
 </body>
 </html>
 """
-
-
 EASTER_EGG_HTML = """
 <div style="text-align:center;padding:40px 20px">
   <div style="font-size:5rem">🍝</div>
@@ -963,6 +975,66 @@ class Handler(BaseHTTPRequestHandler):
             params = urllib.parse.parse_qs(parsed.query)
             tip_id = int(params.get("tip_id", [1])[0])
             body   = json.dumps(lunch_agent.answer_training(tip_id)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/request":
+            params = urllib.parse.parse_qs(parsed.query)
+            name   = params.get("name", [""])[0]
+            who    = params.get("who",  ["Anoniem"])[0]
+            body   = json.dumps(lunch_agent.add_product_request(name, who)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/request/vote":
+            params = urllib.parse.parse_qs(parsed.query)
+            req_id = int(params.get("id", [0])[0])
+            body   = json.dumps(lunch_agent.vote_product_request(req_id)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/complaint":
+            params = urllib.parse.parse_qs(parsed.query)
+            text   = params.get("text", ["..."])[0]
+            body   = json.dumps(lunch_agent.submit_complaint(text)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/mood":
+            params = urllib.parse.parse_qs(parsed.query)
+            person = params.get("person", ["Anoniem"])[0]
+            score  = int(params.get("score", [3])[0])
+            body   = json.dumps(lunch_agent.set_mood(person, score)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/oracle":
+            params   = urllib.parse.parse_qs(parsed.query)
+            question = params.get("q", ["Wat is het antwoord?"])[0]
+            body     = json.dumps(lunch_agent.ask_oracle(question)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/spin":
+            body = json.dumps(lunch_agent.spin_slot_machine()).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
