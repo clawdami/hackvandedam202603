@@ -12,13 +12,19 @@ import sys
 import threading
 import time
 import urllib.parse
-import webbrowser
+import os
+try:
+    import webbrowser
+    _HAS_BROWSER = True
+except ImportError:
+    _HAS_BROWSER = False
 from http.server import BaseHTTPRequestHandler
 
 from weather_dashboard import fetch_weather, fetch_meatball_spots
 import lunch_agent
 
-PORT = 7878
+PORT = int(os.environ.get("PORT", 7878))
+HOST = os.environ.get("HOST", "127.0.0.1")
 DEFAULT_CITY = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "Amsterdam"
 
 # Session-wide meatball counter
@@ -1344,13 +1350,14 @@ class Handler(BaseHTTPRequestHandler):
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 def run():
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    url = f"http://localhost:{PORT}"
+    server = http.server.ThreadingHTTPServer((HOST, PORT), Handler)
+    url = f"http://{HOST}:{PORT}"
     print(f"\n  🍝  Meatball Weather Deluxe is simmering at {url}")
     print(f"  🍖  Default city: {DEFAULT_CITY}")
     print(f"  🥚  Psst: try typing 'meatball' as a city")
     print(f"  ✋  Press Ctrl+C to stop\n")
-    threading.Timer(0.5, lambda: webbrowser.open(url)).start()
+    if _HAS_BROWSER and HOST == "127.0.0.1":
+        threading.Timer(0.5, lambda: webbrowser.open(url)).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:
