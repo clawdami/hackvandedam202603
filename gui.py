@@ -24,7 +24,10 @@ from weather_dashboard import fetch_weather, fetch_meatball_spots
 import lunch_agent
 
 PORT = int(os.environ.get("PORT", 7878))
-HOST = os.environ.get("HOST", "127.0.0.1")
+# Default to 0.0.0.0 if HOST is set, or if running on a cloud platform
+# (detected by presence of PORT env var, which Render/Railway set automatically)
+_cloud = "PORT" in os.environ
+HOST = os.environ.get("HOST", "0.0.0.0" if _cloud else "127.0.0.1")
 DEFAULT_CITY = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "Amsterdam"
 
 # Session-wide meatball counter
