@@ -97,207 +97,178 @@ LUNCH_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🥙 Meatball Lunch Agent</title>
+<title>🥙 THE MEATBALL</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
   :root {
-    --bg:     #1A2A1A; --bg-card: #243524; --green: #4CAF50;
-    --lime:   #8BC34A; --yellow: #FFC107; --red: #F44336;
-    --cream:  #F5F0E8; --muted:  #8A9E8A; --border: #3A5A3A;
-    --sauce:  #C0392B; --cheese: #F5CBA7;
+    --bg:#1A2A1A;--bg-card:#243524;--green:#4CAF50;--lime:#8BC34A;
+    --yellow:#FFC107;--red:#F44336;--cream:#F5F0E8;--muted:#8A9E8A;
+    --border:#3A5A3A;--sauce:#C0392B;--cheese:#F5CBA7;--gold:#FFD700;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--cream);
-    font-family: 'Courier Prime', 'Courier New', monospace;
-    min-height: 100vh; padding-bottom: 40px;
-  }
-  header {
-    background: #2D4A2D; border-bottom: 2px solid var(--green);
-    padding: 16px 20px; display: flex; align-items: center; gap: 16px;
-  }
-  header h1 { font-size: 1.5rem; color: var(--lime); }
-  header p  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-  .nav-link {
-    margin-left: auto; color: var(--muted); text-decoration: none;
-    font-size: 0.85rem; border: 1px solid var(--border);
-    padding: 6px 12px; border-radius: 4px; transition: color .2s;
-  }
-  .nav-link:hover { color: var(--lime); border-color: var(--lime); }
-
-  .grid {
-    display: grid; gap: 14px; padding: 14px 16px;
-    max-width: 960px; margin: 0 auto;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-
-  .card {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 8px; overflow: hidden;
-  }
-  .card-header {
-    background: #2D4A2D; padding: 10px 14px;
-    font-size: 0.9rem; font-weight: bold; color: var(--lime);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .card-body { padding: 14px; }
-
-  /* Luncher counter */
-  .luncher-display {
-    text-align: center; font-size: 3rem; font-weight: bold;
-    color: var(--lime); margin: 10px 0 4px;
-  }
-  .luncher-sub { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; }
-  .btn-row { display: flex; gap: 8px; justify-content: center; }
-  .btn {
-    background: #2D4A2D; border: 1px solid var(--border); border-radius: 4px;
-    color: var(--cream); cursor: pointer; font-family: inherit;
-    font-size: 0.9rem; padding: 8px 14px; transition: background .15s;
-  }
-  .btn:hover { background: var(--green); color: #000; }
-  .btn.primary { background: var(--green); color: #000; font-weight: bold; }
-  .btn.primary:hover { background: var(--lime); }
-  .btn.danger { background: var(--sauce); color: var(--cream); }
-  .btn.danger:hover { background: #e74c3c; }
-
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--cream);font-family:'Courier Prime','Courier New',monospace;min-height:100vh;padding-bottom:40px;}
+  header{background:#2D4A2D;border-bottom:2px solid var(--green);padding:14px 20px;display:flex;align-items:center;gap:16px;}
+  header h1{font-size:1.4rem;color:var(--lime);}
+  header p{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+  .nav-link{margin-left:auto;color:var(--muted);text-decoration:none;font-size:0.82rem;border:1px solid var(--border);padding:5px 10px;border-radius:4px;transition:color .2s;}
+  .nav-link:hover{color:var(--lime);border-color:var(--lime);}
+  .grid{display:grid;gap:12px;padding:12px 14px;max-width:1100px;margin:0 auto;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .card.wide{grid-column:span 2;}
+  .card-header{background:#2D4A2D;padding:9px 13px;font-size:0.88rem;font-weight:bold;color:var(--lime);display:flex;align-items:center;gap:8px;}
+  .card-body{padding:13px;}
+  /* Luncher */
+  .big-num{text-align:center;font-size:3rem;font-weight:bold;color:var(--lime);margin:8px 0 2px;}
+  .sub{text-align:center;font-size:0.76rem;color:var(--muted);margin-bottom:12px;}
+  .btn-row{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;}
+  .btn{background:#2D4A2D;border:1px solid var(--border);border-radius:4px;color:var(--cream);cursor:pointer;font-family:inherit;font-size:0.88rem;padding:7px 12px;transition:background .15s;}
+  .btn:hover{background:var(--green);color:#000;}
+  .btn.ok{background:var(--green);color:#000;font-weight:bold;}
+  .btn.ok:hover{background:var(--lime);}
+  .btn.bad{background:var(--sauce);color:var(--cream);}
+  .btn.bad:hover{background:#e74c3c;}
+  /* Agenda */
+  .agenda-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-top:6px;}
+  .agenda-table th{color:var(--muted);padding:4px 6px;text-align:center;border-bottom:1px solid var(--border);}
+  .agenda-table td{padding:5px 6px;text-align:center;border-bottom:1px solid #1A2A1A;}
+  .agenda-table td:first-child{text-align:left;color:var(--cream);font-weight:bold;}
+  .day-check{cursor:pointer;font-size:1.1rem;}
+  .today-col{background:rgba(139,195,74,0.1);border-left:2px solid var(--lime);border-right:2px solid var(--lime);}
   /* Budget */
-  .budget-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; }
-  .budget-bar-bg {
-    width: 100%; height: 12px; background: #1A2A1A;
-    border-radius: 6px; overflow: hidden; margin-bottom: 8px;
-  }
-  .budget-bar { height: 100%; border-radius: 6px; transition: width .4s; }
-  .savings-box {
-    background: #1A2A1A; border-radius: 4px; padding: 8px 10px;
-    font-size: 0.82rem; margin-top: 8px;
-  }
-
+  .brow{display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.84rem;}
+  .bar-bg{width:100%;height:11px;background:#1A2A1A;border-radius:5px;overflow:hidden;margin-bottom:7px;}
+  .bar{height:100%;border-radius:5px;transition:width .4s;}
+  /* SpaarBall */
+  .spaarball{background:#1A2A1A;border-radius:6px;padding:10px 12px;margin-top:8px;text-align:center;}
+  .spaarball .euro{font-size:2rem;color:var(--gold);}
+  .spaarball .label{font-size:0.72rem;color:var(--muted);margin-top:3px;}
   /* Inventory */
-  .inv-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 0; border-bottom: 1px solid var(--border);
-    font-size: 0.85rem;
-  }
-  .inv-item:last-child { border-bottom: none; }
-  .inv-emoji { font-size: 1.2rem; width: 28px; text-align: center; }
-  .inv-name  { flex: 1; }
-  .inv-qty   { font-weight: bold; min-width: 40px; text-align: right; }
-  .inv-unit  { color: var(--muted); font-size: 0.75rem; min-width: 28px; }
-  .inv-low   { color: var(--red); }
-  .inv-ok    { color: var(--green); }
-
-  /* Suggestion */
-  .suggestion-dish { font-size: 1.6rem; font-weight: bold; color: var(--lime); margin: 8px 0 4px; }
-  .suggestion-meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
-  .vote-count { font-size: 0.8rem; color: var(--yellow); margin-top: 6px; }
-
+  .inv-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
+  .inv-item:last-child{border-bottom:none;}
+  .inv-emoji{font-size:1.1rem;width:26px;text-align:center;}
+  .inv-name{flex:1;}
+  .inv-qty{font-weight:bold;min-width:36px;text-align:right;}
+  .inv-unit{color:var(--muted);font-size:0.72rem;min-width:26px;}
+  .inv-low{color:var(--red);}
+  .inv-ok{color:var(--green);}
+  /* Picnic list */
+  .picnic-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;}
+  .picnic-item:last-child{border-bottom:none;}
+  /* Poll */
+  .poll-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.83rem;cursor:pointer;transition:background .12s;}
+  .poll-item:hover{background:#1A2A1A;border-radius:4px;}
+  .poll-item:last-child{border-bottom:none;}
+  .poll-bar-bg{flex:1;height:8px;background:#1A2A1A;border-radius:4px;overflow:hidden;}
+  .poll-bar{height:100%;background:var(--green);border-radius:4px;transition:width .4s;}
+  .poll-votes{font-size:0.72rem;color:var(--muted);min-width:28px;text-align:right;}
+  .poll-winner{color:var(--gold)!important;}
   /* Training */
-  .tip-card {
-    background: #1A2A1A; border-radius: 6px; padding: 10px 12px;
-    margin-bottom: 8px; cursor: pointer; transition: background .15s;
-  }
-  .tip-card:hover { background: #243524; }
-  .tip-card .tip-emoji { font-size: 1.3rem; margin-right: 8px; }
-  .tip-card .tip-text  { font-size: 0.83rem; color: var(--cream); }
-  .score-box { text-align: center; font-size: 1.8rem; font-weight: bold; color: var(--yellow); margin-bottom: 12px; }
-
+  .tip-card{background:#1A2A1A;border-radius:5px;padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:background .14s;display:flex;align-items:flex-start;gap:8px;}
+  .tip-card:hover{background:#2D4A2D;}
+  .score-box{text-align:center;font-size:1.6rem;font-weight:bold;color:var(--yellow);margin-bottom:10px;}
   /* Toast */
-  #toast {
-    position: fixed; bottom: 20px; right: 20px;
-    background: var(--green); color: #000;
-    padding: 10px 16px; border-radius: 6px;
-    font-size: 0.85rem; font-family: inherit;
-    display: none; z-index: 999; max-width: 300px;
-  }
-
-  .status-msg { font-size: 0.78rem; color: var(--lime); margin-top: 8px; min-height: 18px; }
-  .week-badge {
-    font-size: 0.7rem; color: var(--muted); background: #1A2A1A;
-    padding: 2px 6px; border-radius: 3px; margin-left: auto;
-  }
+  #toast{position:fixed;bottom:18px;right:18px;background:var(--green);color:#000;padding:9px 14px;border-radius:6px;font-size:0.83rem;font-family:inherit;display:none;z-index:999;max-width:280px;}
+  .msg{font-size:0.76rem;color:var(--lime);margin-top:7px;min-height:16px;}
+  .badge{font-size:0.68rem;color:var(--muted);background:#1A2A1A;padding:2px 5px;border-radius:3px;margin-left:auto;}
+  .picnic-link{display:inline-block;margin-top:8px;color:var(--lime);font-size:0.8rem;text-decoration:none;border:1px solid var(--border);padding:5px 10px;border-radius:4px;}
+  .picnic-link:hover{border-color:var(--lime);}
 </style>
 </head>
 <body>
 <header>
-  <div>
-    <h1>🥙 Meatball Lunch Agent</h1>
-    <p>Super Modern Lunch Dashboard voor de Lunch</p>
-  </div>
-  <a class="nav-link" href="/">← Terug naar weer</a>
+  <div><h1>🥙 THE MEATBALL</h1><p>Super Modern Lunch Dashboard voor de Lunch</p></div>
+  <a class="nav-link" href="/">← Weer</a>
 </header>
 
 <div class="grid">
 
   <!-- Luncher Counter -->
   <div class="card">
-    <div class="card-header">👥 Aantal Lunchers <span class="week-badge" id="weekBadge">week --</span></div>
+    <div class="card-header">👥 Aantal Lunchers <span class="badge" id="weekBadge">week --</span></div>
     <div class="card-body">
-      <div class="luncher-display" id="luncherCount">--</div>
-      <div class="luncher-sub">mensen eten vandaag mee</div>
+      <div class="big-num" id="luncherCount">--</div>
+      <div class="sub">mensen eten vandaag mee</div>
       <div class="btn-row">
-        <button class="btn" onclick="changeLunchers(-5)">−5</button>
-        <button class="btn" onclick="changeLunchers(-1)">−1</button>
-        <button class="btn" onclick="changeLunchers(+1)">+1</button>
-        <button class="btn" onclick="changeLunchers(+5)">+5</button>
+        <button class="btn" onclick="chgLunch(-5)">−5</button>
+        <button class="btn" onclick="chgLunch(-1)">−1</button>
+        <button class="btn" onclick="chgLunch(+1)">+1</button>
+        <button class="btn" onclick="chgLunch(+5)">+5</button>
       </div>
-      <div class="status-msg" id="luncherMsg"></div>
-    </div>
-  </div>
-
-  <!-- Weekly Suggestion -->
-  <div class="card">
-    <div class="card-header">💡 Wekelijkse Suggestie</div>
-    <div class="card-body">
-      <div class="suggestion-dish" id="suggEmoji">🍝</div>
-      <div class="suggestion-dish" id="suggDish">Laden…</div>
-      <div class="suggestion-meta">⏱️ <span id="suggPrep">--</span> bereidingstijd</div>
-      <button class="btn primary" onclick="voteSuggestion()">👍 Stem op dit gerecht</button>
-      <div class="vote-count" id="voteCount">-- stemmen deze week</div>
+      <div class="msg" id="lunchMsg"></div>
     </div>
   </div>
 
   <!-- Budget -->
   <div class="card">
-    <div class="card-header">💶 Budget & Spaarplan</div>
+    <div class="card-header">💶 Budget (€120 cap)</div>
     <div class="card-body">
-      <div class="budget-row">
-        <span>Uitgegeven</span><span id="budgetSpent">€--</span>
+      <div class="brow"><span>Uitgegeven</span><span id="budSpent">€--</span></div>
+      <div class="brow"><span>Cap</span><span id="budCap">€--</span></div>
+      <div class="bar-bg"><div class="bar" id="budBar" style="width:0%"></div></div>
+      <div class="brow" style="font-weight:bold"><span>Resterend</span><span id="budRem">€--</span></div>
+      <div class="msg" id="budStatus"></div>
+      <div class="spaarball">
+        <div style="font-size:0.8rem;color:var(--muted);margin-bottom:4px">🏦 SpaarBall — <em>budget over gaat naar de SpaarBall</em></div>
+        <div class="euro" id="spaarbBal">€--</div>
+        <div class="label" id="spaarbEarn">SpaarPlan Biertafels · 1,23% · +€-- dit jaar</div>
       </div>
-      <div class="budget-row">
-        <span>Budget cap</span><span id="budgetCap">€--</span>
-      </div>
-      <div class="budget-bar-bg">
-        <div class="budget-bar" id="budgetBar" style="width:0%"></div>
-      </div>
-      <div class="budget-row" style="font-weight:bold">
-        <span>Resterend</span><span id="budgetRem">€--</span>
-      </div>
-      <div class="savings-box">
-        🫙 Spaarplan (sauzen/uitjes): <strong id="savingsPot">€--</strong><br>
-        <span style="font-size:0.75rem;color:var(--muted)">Reservering voor sauzen, uitjes, ect.</span>
-      </div>
-      <div class="status-msg" id="budgetStatus"></div>
+    </div>
+  </div>
+
+  <!-- Agenda -->
+  <div class="card wide">
+    <div class="card-header">📅 Lunch Agenda (wie is er wanneer?)</div>
+    <div class="card-body">
+      <table class="agenda-table" id="agendaTable">
+        <thead><tr>
+          <th>Naam</th>
+          <th id="th-MA">MA</th><th id="th-DI">DI</th><th id="th-WO">WO</th>
+          <th id="th-DO">DO</th><th id="th-VR">VR</th>
+        </tr></thead>
+        <tbody id="agendaBody"></tbody>
+      </table>
+      <div class="msg" id="agendaMsg"></div>
     </div>
   </div>
 
   <!-- Inventory -->
-  <div class="card" style="grid-column: span 1;">
-    <div class="card-header">📦 Voorraad Overzicht</div>
+  <div class="card">
+    <div class="card-header">📦 Voorraad</div>
     <div class="card-body">
-      <div id="inventoryList">Laden…</div>
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" onclick="scanInventory()">📸 Scan voorraadla</button>
-        <button class="btn danger"  onclick="orderPicnic()">🛒 Bestel via Picnic</button>
+      <div id="invList">Laden…</div>
+      <div style="margin-top:9px;display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn ok" onclick="scanInv()">📸 Scan voorraadla</button>
       </div>
-      <div class="status-msg" id="invMsg"></div>
+      <div class="msg" id="invMsg"></div>
+    </div>
+  </div>
+
+  <!-- Picnic List -->
+  <div class="card">
+    <div class="card-header">🛒 Picnic Lijst</div>
+    <div class="card-body">
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Lijst op basis van voorraad — klik om te bestellen</div>
+      <div id="picnicList">Laden…</div>
+      <button class="btn bad" style="margin-top:9px" onclick="orderPicnic()">🛒 Bestel via Picnic</button>
+      <a class="picnic-link" id="picnicCartLink" href="https://picnic.app" target="_blank" style="display:none">🔗 Open winkelmandje →</a>
+      <div class="msg" id="picnicMsg"></div>
+    </div>
+  </div>
+
+  <!-- Suggestion Poll (VORM POLL) -->
+  <div class="card">
+    <div class="card-header">💡 Lunch Suggestie — VORM POLL</div>
+    <div class="card-body">
+      <div style="font-size:0.76rem;color:var(--muted);margin-bottom:8px">Klik op een gerecht om te stemmen</div>
+      <div id="pollList">Laden…</div>
     </div>
   </div>
 
   <!-- Order History -->
   <div class="card">
-    <div class="card-header">🛒 Picnic Bestellingen</div>
+    <div class="card-header">📋 Bestelhistorie</div>
     <div class="card-body">
-      <div id="orderHistory" style="font-size:0.82rem;color:var(--muted)">Geen bestellingen</div>
+      <div id="orderHist" style="font-size:0.8rem;color:var(--muted)">Geen bestellingen</div>
     </div>
   </div>
 
@@ -305,24 +276,28 @@ LUNCH_HTML = """<!DOCTYPE html>
   <div class="card">
     <div class="card-header">🎓 Training Tool</div>
     <div class="card-body">
-      <div class="score-box">⭐ <span id="trainingScore">0</span> pts</div>
-      <div id="trainingTips">Laden…</div>
+      <div class="score-box">⭐ <span id="trainScore">0</span> pts</div>
+      <div id="trainTips">Laden…</div>
     </div>
   </div>
 
 </div>
-
 <div id="toast"></div>
 
 <script>
 let state = {};
 
-function toast(msg, color) {
+function toast(msg, col) {
   const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.style.background = color || "var(--green)";
+  el.textContent = msg; el.style.background = col || "var(--green)";
   el.style.display = "block";
   setTimeout(() => el.style.display = "none", 3000);
+}
+function msg(id, txt, ms) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = txt;
+  if (ms) setTimeout(() => { if (el.textContent === txt) el.textContent = ""; }, ms);
 }
 
 async function loadState() {
@@ -336,40 +311,83 @@ function render() {
   document.getElementById("luncherCount").textContent = state.lunchers;
   document.getElementById("weekBadge").textContent    = "week " + state.week;
 
-  // Suggestion
-  const s = state.suggestion;
-  document.getElementById("suggEmoji").textContent = s.emoji;
-  document.getElementById("suggDish").textContent  = s.dish;
-  document.getElementById("suggPrep").textContent  = s.prep;
-  document.getElementById("voteCount").textContent = s.votes + " stemmen deze week";
-
   // Budget
   const b = state.budget;
-  document.getElementById("budgetSpent").textContent = "€" + b.spent.toFixed(2);
-  document.getElementById("budgetCap").textContent   = "€" + b.cap.toFixed(2);
-  document.getElementById("budgetRem").textContent   = "€" + b.remaining.toFixed(2);
-  document.getElementById("savingsPot").textContent  = "€" + b.savings.toFixed(2);
-  document.getElementById("budgetStatus").textContent = b.status;
-  const bar = document.getElementById("budgetBar");
-  bar.style.width = Math.min(b.pct_used, 100) + "%";
+  document.getElementById("budSpent").textContent  = "€" + b.spent.toFixed(2);
+  document.getElementById("budCap").textContent    = "€" + b.cap.toFixed(2);
+  document.getElementById("budRem").textContent    = "€" + b.remaining.toFixed(2);
+  document.getElementById("budStatus").textContent = b.status;
+  const bar = document.getElementById("budBar");
+  bar.style.width      = Math.min(b.pct_used, 100) + "%";
   bar.style.background = b.pct_used >= 80 ? "var(--red)" : b.pct_used >= 60 ? "var(--yellow)" : "var(--green)";
+  document.getElementById("spaarbBal").textContent  = "€" + b.spaarball.toFixed(2);
+  document.getElementById("spaarbEarn").textContent = "SpaarPlan Biertafels · " + b.spaarball_pct + "% · +€" + b.spaarball_earn.toFixed(2) + " dit jaar";
+
+  // Agenda
+  const tbody = document.getElementById("agendaBody");
+  const days  = state.weekdays;
+  // highlight today
+  days.forEach(d => {
+    const th = document.getElementById("th-" + d);
+    if (th) th.style.color = d === state.today ? "var(--lime)" : "";
+  });
+  tbody.innerHTML = Object.entries(state.agenda).map(([name, schedule]) =>
+    `<tr>
+      <td>${name}</td>
+      ${days.map(d => {
+        const on = schedule[d];
+        const today = d === state.today;
+        return `<td class="${today ? 'today-col' : ''}">
+          <span class="day-check" onclick="toggleAgenda('${name}','${d}')" title="${name} op ${d}">${on ? "✅" : "❌"}</span>
+        </td>`;
+      }).join("")}
+     </tr>`
+  ).join("");
 
   // Inventory
-  const inv = document.getElementById("inventoryList");
-  inv.innerHTML = state.inventory.map(i => {
+  document.getElementById("invList").innerHTML = state.inventory.map(i => {
     const low = i.qty < i.min;
     return `<div class="inv-item">
       <span class="inv-emoji">${i.emoji}</span>
       <span class="inv-name">${i.name}</span>
       <span class="inv-qty ${low ? 'inv-low' : 'inv-ok'}">${i.qty}</span>
       <span class="inv-unit">${i.unit}</span>
-      ${low ? '<span style="color:var(--red);font-size:0.7rem">⚠️ laag</span>' : ''}
+      ${low ? '<span style="font-size:0.7rem;color:var(--red)">⚠️</span>' : ''}
+    </div>`;
+  }).join("");
+
+  // Picnic list
+  const pl = document.getElementById("picnicList");
+  if (!state.picnic_list || state.picnic_list.length === 0) {
+    pl.innerHTML = '<div style="color:var(--green);font-size:0.82rem">✅ Voorraad is prima — niets te bestellen</div>';
+  } else {
+    pl.innerHTML = state.picnic_list.map(i =>
+      `<div class="picnic-item">
+        <span>${i.emoji}</span>
+        <span style="flex:1">${i.name}</span>
+        <span style="color:var(--yellow);font-size:0.8rem">+${i.needed} ${i.unit}</span>
+       </div>`
+    ).join("");
+  }
+
+  // Poll
+  const poll = state.suggestion.poll || [];
+  const maxV = Math.max(...poll.map(p => p.votes), 1);
+  const winner = poll.reduce((a,b) => b.votes > a.votes ? b : a, poll[0] || {});
+  document.getElementById("pollList").innerHTML = poll.map(p => {
+    const pct = Math.round((p.votes / maxV) * 100);
+    const isWinner = p.votes > 0 && p.dish === winner.dish;
+    return `<div class="poll-item" onclick="votePoll('${p.dish.replace(/'/g, "\'")}')">
+      <span>${p.emoji}</span>
+      <span style="flex:0 0 130px;font-size:0.8rem;${isWinner ? 'color:var(--gold);font-weight:bold' : ''}">${p.dish}</span>
+      <div class="poll-bar-bg"><div class="poll-bar" style="width:${pct}%;${isWinner ? 'background:var(--gold)' : ''}"></div></div>
+      <span class="poll-votes ${isWinner ? 'poll-winner' : ''}">${p.votes}</span>
     </div>`;
   }).join("");
 
   // Order history
-  const oh = document.getElementById("orderHistory");
-  if (state.order_history.length === 0) {
+  const oh = document.getElementById("orderHist");
+  if (!state.order_history || state.order_history.length === 0) {
     oh.textContent = "Geen bestellingen";
   } else {
     oh.innerHTML = state.order_history.slice().reverse().map(o =>
@@ -381,64 +399,73 @@ function render() {
   }
 
   // Training
-  document.getElementById("trainingScore").textContent = state.training_score;
-  const tips = document.getElementById("trainingTips");
-  tips.innerHTML = state.training_tips.map(t =>
+  document.getElementById("trainScore").textContent = state.training_score;
+  document.getElementById("trainTips").innerHTML = state.training_tips.map(t =>
     `<div class="tip-card" onclick="markTip(${t.id})">
-      <span class="tip-emoji">${t.emoji}</span>
-      <span class="tip-text">${t.tip}</span>
+      <span style="font-size:1.2rem">${t.emoji}</span>
+      <span style="font-size:0.82rem">${t.tip}</span>
      </div>`
   ).join("");
 }
 
-async function changeLunchers(delta) {
-  const n = (state.lunchers || 0) + delta;
+async function chgLunch(delta) {
+  const n = (state.lunchers||0) + delta;
   const r = await fetch("/lunch/lunchers?n=" + n);
   const d = await r.json();
   state.lunchers = d.lunchers;
   document.getElementById("luncherCount").textContent = d.lunchers;
-  document.getElementById("luncherMsg").textContent = "👥 Bijgewerkt naar " + d.lunchers + " lunchers";
-  setTimeout(() => document.getElementById("luncherMsg").textContent = "", 2000);
+  msg("lunchMsg", "👥 " + d.lunchers + " lunchers", 2000);
 }
 
-async function voteSuggestion() {
-  const dish = state.suggestion.dish;
+async function toggleAgenda(person, day) {
+  const r = await fetch("/lunch/agenda?person=" + encodeURIComponent(person) + "&day=" + day);
+  const d = await r.json();
+  state.agenda = d.agenda;
+  render();
+  msg("agendaMsg", person + " op " + day + " bijgewerkt", 2000);
+}
+
+async function votePoll(dish) {
   const r = await fetch("/lunch/vote?dish=" + encodeURIComponent(dish));
   const d = await r.json();
-  state.suggestion.votes = d.votes;
-  document.getElementById("voteCount").textContent = d.votes + " stemmen deze week";
-  toast("👍 Stem uitgebracht op " + dish + "!");
+  // update local poll votes
+  const item = state.suggestion.poll.find(p => p.dish === dish);
+  if (item) item.votes = d.votes;
+  render();
+  toast("👍 Gestemd op " + dish + "!");
 }
 
-async function scanInventory() {
-  document.getElementById("invMsg").textContent = "📸 Scanning…";
+async function scanInv() {
+  msg("invMsg", "📸 Scanning…");
   const r = await fetch("/lunch/scan");
   const d = await r.json();
   state.inventory = d.inventory;
   render();
-  document.getElementById("invMsg").textContent = d.message;
+  msg("invMsg", d.message, 3000);
   toast(d.message);
-  setTimeout(() => document.getElementById("invMsg").textContent = "", 3000);
 }
 
 async function orderPicnic() {
-  document.getElementById("invMsg").textContent = "🛒 Bestelling plaatsen…";
+  msg("picnicMsg", "🛒 Bestelling plaatsen…");
   const r = await fetch("/lunch/order");
   const d = await r.json();
   if (d.ok) {
     toast(d.message, "var(--sauce)");
+    if (d.picnic_url) {
+      const lnk = document.getElementById("picnicCartLink");
+      lnk.href = d.picnic_url; lnk.style.display = "inline-block";
+    }
     await loadState();
   } else {
     toast("✅ " + d.message, "var(--green)");
   }
-  document.getElementById("invMsg").textContent = d.message;
-  setTimeout(() => document.getElementById("invMsg").textContent = "", 4000);
+  msg("picnicMsg", d.message, 4000);
 }
 
 async function markTip(tipId) {
   const r = await fetch("/lunch/training?tip_id=" + tipId);
   const d = await r.json();
-  document.getElementById("trainingScore").textContent = d.score;
+  document.getElementById("trainScore").textContent = d.score;
   toast("🎓 " + d.message);
 }
 
@@ -448,6 +475,7 @@ setInterval(loadState, 30000);
 </body>
 </html>
 """
+
 
 EASTER_EGG_HTML = """
 <div style="text-align:center;padding:40px 20px">
@@ -892,10 +920,21 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
 
+        elif parsed.path == "/lunch/agenda":
+            params = urllib.parse.parse_qs(parsed.query)
+            person = params.get("person", [""])[0]
+            day    = params.get("day",    ["MA"])[0]
+            body   = json.dumps(lunch_agent.toggle_agenda(person, day)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
         elif parsed.path == "/lunch/vote":
             params = urllib.parse.parse_qs(parsed.query)
             dish   = params.get("dish", [""])[0]
-            body   = json.dumps(lunch_agent.vote_suggestion(dish)).encode()
+            body   = json.dumps(lunch_agent.vote_poll(dish)).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
