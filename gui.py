@@ -13,6 +13,7 @@ import threading
 import time
 import urllib.parse
 import os
+from datetime import datetime as _dt
 try:
     import webbrowser
     _HAS_BROWSER = True
@@ -1173,7 +1174,14 @@ class Handler(BaseHTTPRequestHandler):
         global _meatballs_served
         parsed = urllib.parse.urlparse(self.path)
 
-        if parsed.path == "/weather":
+        if parsed.path in ("/health", "/healthz", "/ping"):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.send_header("Content-Length", "2")
+            self.end_headers()
+            self.wfile.write(b"OK")
+
+        elif parsed.path == "/weather":
             params = urllib.parse.parse_qs(parsed.query)
             city   = params.get("city", [DEFAULT_CITY])[0]
             data   = fetch_weather(city)
@@ -1337,7 +1345,8 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
 
         else:
-            # Inject values into the HTML template
+            # Serve main dashboard for / and any unrecognised path
+            print(f"[{_dt.now().strftime('%H:%M:%S')}] GET {parsed.path} → main dashboard")
             page = (HTML_TEMPLATE
                 .replace("__DEFAULT_CITY__", DEFAULT_CITY)
                 .replace("__WISDOM__", pasta_wisdom())
