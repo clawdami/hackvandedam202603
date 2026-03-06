@@ -15,7 +15,7 @@ import urllib.parse
 import webbrowser
 from http.server import BaseHTTPRequestHandler
 
-from weather_dashboard import fetch_weather
+from weather_dashboard import fetch_weather, fetch_meatball_spots
 
 PORT = 7878
 DEFAULT_CITY = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "Amsterdam"
@@ -239,6 +239,32 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
   .spaghetti { font-size: 0.7rem; letter-spacing: 3px; color: var(--meatball); margin: 18px 0 4px; text-align: center; }
 
+  /* ── Meatball Spots ── */
+  .spots-section {
+    background: var(--bg-card); border: 2px solid var(--meatball);
+    border-radius: 8px; margin: 14px 16px 0;
+    max-width: 520px; width: 100%; overflow: hidden;
+  }
+  .spots-header {
+    background: var(--sauce); padding: 10px 16px;
+    font-size: 1rem; font-weight: bold; color: var(--cheese);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .spots-list { padding: 8px 0; }
+  .spot-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 16px; border-bottom: 1px solid var(--bg-mid);
+    transition: background .15s;
+  }
+  .spot-item:last-child { border-bottom: none; }
+  .spot-item:hover { background: rgba(255,255,255,.04); }
+  .spot-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+  .spot-name { font-size: 0.95rem; font-weight: bold; color: var(--cheese); }
+  .spot-meta { font-size: 0.75rem; color: var(--parchment); margin-top: 2px; }
+  .spot-dist { font-size: 0.72rem; color: var(--orange); margin-top: 2px; }
+  .spots-empty { padding: 16px; text-align: center; color: var(--parchment); font-size: 0.85rem; font-style: italic; }
+  .spots-loading { padding: 14px 16px; color: var(--orange); font-size: 0.85rem; }
+
   /* Loading animation */
   @keyframes pasta-spin {
     0%   { content: "🍝"; }
@@ -295,6 +321,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 </div>
 
 <div id="easterEgg" style="display:none;max-width:520px;width:100%;margin:14px 16px 0;background:#4A2C15;border:2px solid #8B4513;border-radius:8px;overflow:hidden"></div>
+
+<div class="spots-section" id="spotsSection" style="display:none">
+  <div class="spots-header">🍝 Nearby Meatball Spots</div>
+  <div class="spots-list" id="spotsList">
+    <div class="spots-loading">🍖 Sniffing out meatballs in the area…</div>
+  </div>
+</div>
 
 <div class="spaghetti">~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~</div>
 <div class="status" id="status">🍝 Ready to serve weather</div>
@@ -393,6 +426,31 @@ function doSearch() {
       // Refresh wisdom quote
       document.getElementById("wisdom").textContent = d.wisdom;
 
+      // Nearby meatball spots
+      const spotsSection = document.getElementById("spotsSection");
+      const spotsList    = document.getElementById("spotsList");
+      spotsSection.style.display = "block";
+      if (!d.spots || d.spots.length === 0) {
+        spotsList.innerHTML = '<div class="spots-empty">😔 No meatball spots found nearby. Consider moving.</div>';
+      } else {
+        const typeIcon = t => {
+          if (t === "fast_food") return "🍟";
+          if (t === "restaurant") return "🍽️";
+          if (t === "shop") return "🛒";
+          return "📍";
+        };
+        const distLabel = m => m < 1000 ? m + " m" : (m/1000).toFixed(1) + " km";
+        spotsList.innerHTML = d.spots.map(s => `
+          <div class="spot-item">
+            <div class="spot-icon">${typeIcon(s.type)}</div>
+            <div>
+              <div class="spot-name">${s.name}</div>
+              <div class="spot-meta">${[s.cuisine, s.address].filter(Boolean).join(" · ") || s.type}</div>
+              <div class="spot-dist">📍 ${distLabel(s.distance_m)} away</div>
+            </div>
+          </div>`).join("");
+      }
+
       setStatus("🍝 Buon appetito! Served at " + now, "ok");
     })
     .catch(e => { clearInterval(anim); setStatus("❌ " + e, "err"); });
@@ -432,6 +490,7 @@ class Handler(BaseHTTPRequestHandler):
                     _meatballs_served += 1
                 rating, label = meatball_rating(data["temp_c"], data["desc"], data["wind_kmph"])
                 card_bg, accent = card_colors(data["temp_c"])
+                spots = fetch_meatball_spots(city)
                 data.update({
                     "rating":       rating,
                     "rating_label": label,
@@ -439,6 +498,7 @@ class Handler(BaseHTTPRequestHandler):
                     "wisdom":       pasta_wisdom(),
                     "card_bg":      card_bg,
                     "accent":       accent,
+                    "spots":        spots,
                 })
 
             body = json.dumps(data).encode()
