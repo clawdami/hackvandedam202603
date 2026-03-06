@@ -2,11 +2,9 @@ services:
   - type: web
     name: the-meatball
     runtime: python
-    buildCommand: "echo 'No build needed — pure stdlib!'"
+    buildCommand: "echo 'No build — pure stdlib'"
     startCommand: "python3 gui.py"
     envVars:
       - key: HOST
         value: "0.0.0.0"
-      - key: PORT
-        fromPort: 10000
     plan: free
