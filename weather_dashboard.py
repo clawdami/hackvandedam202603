@@ -5,6 +5,7 @@ Fetches weather from wttr.in and renders a colorful terminal display.
 """
 
 import json
+import math
 import sys
 import urllib.parse
 import urllib.request
@@ -70,6 +71,105 @@ def fetch_weather(city: str) -> dict:
             last_error = str(e)
             continue
     return {"error": last_error}
+
+
+def geocode_city(city: str) -> tuple[float, float] | None:
+    """Return (lat, lon) for a city using Nominatim (OSM). Returns None on failure."""
+    url = (
+        "https://nominatim.openstreetmap.org/search"
+        f"?q={urllib.parse.quote(city)}&format=json&limit=1"
+    )
+    headers = {"User-Agent": "MeatballWeatherApp/1.0"}
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=10) as r:
+            results = json.loads(r.read())
+        if results:
+            return float(results[0]["lat"]), float(results[0]["lon"])
+    except Exception:
+        pass
+    return None
+
+
+def fetch_meatball_spots(city: str, radius_m: int = 5000) -> list[dict]:
+    """Find meatball-related restaurants and stores near a city via Overpass API.
+
+    Searches for Italian restaurants, meatball joints, Swedish furniture stores
+    (IKEA meatballs!), and any venue with meatball in the name — within radius_m metres.
+    Returns a list of dicts with keys: name, type, address, distance_m, osm_id.
+    """
+    coords = geocode_city(city)
+    if not coords:
+        return []
+    lat, lon = coords
+
+    # Overpass QL: cast a wide net for meatball-adjacent venues
+    query = f"""
+[out:json][timeout:15];
+(
+  node["amenity"="restaurant"]["cuisine"~"italian|pizza|pasta|mediterranean",i](around:{radius_m},{lat},{lon});
+  node["amenity"="fast_food"]["cuisine"~"italian|pizza|pasta",i](around:{radius_m},{lat},{lon});
+  node["amenity"="restaurant"]["name"~"meatball|spaghetti|pasta|noodle|trattoria|osteria|ristorante",i](around:{radius_m},{lat},{lon});
+  node["shop"]["name"~"meatball|ikea",i](around:{radius_m},{lat},{lon});
+  node["amenity"~"restaurant|fast_food"]["name"~"ikea",i](around:{radius_m},{lat},{lon});
+);
+out body 20;
+""".strip()
+
+    url = "https://overpass-api.de/api/interpreter"
+    try:
+        data = urllib.parse.urlencode({"data": query}).encode()
+        req = urllib.request.Request(url, data=data, method="POST")
+        req.add_header("User-Agent", "MeatballWeatherApp/1.0")
+        with urllib.request.urlopen(req, timeout=20) as r:
+            result = json.loads(r.read())
+    except Exception:
+        return []
+
+    spots = []
+    for el in result.get("elements", []):
+        tags = el.get("tags", {})
+        name = tags.get("name", "").strip()
+        if not name:
+            continue
+
+        # Build a short address
+        addr_parts = [
+            tags.get("addr:street", ""),
+            tags.get("addr:housenumber", ""),
+            tags.get("addr:city", ""),
+        ]
+        address = " ".join(p for p in addr_parts if p).strip() or None
+
+        cuisine = tags.get("cuisine", "")
+        amenity = tags.get("amenity", tags.get("shop", "place"))
+
+        # Rough distance from city centre (haversine)
+        dlat = math.radians(el.get("lat", lat) - lat)
+        dlon = math.radians(el.get("lon", lon) - lon)
+        a = math.sin(dlat/2)**2 + math.cos(math.radians(lat)) * math.cos(math.radians(el.get("lat", lat))) * math.sin(dlon/2)**2
+        distance_m = int(6371000 * 2 * math.asin(math.sqrt(a)))
+
+        spots.append({
+            "name":       name,
+            "type":       amenity,
+            "cuisine":    cuisine,
+            "address":    address,
+            "distance_m": distance_m,
+            "osm_id":     el.get("id"),
+        })
+
+    # Sort by distance, deduplicate by name, cap at 10
+    seen = set()
+    unique = []
+    for s in sorted(spots, key=lambda x: x["distance_m"]):
+        if s["name"].lower() not in seen:
+            seen.add(s["name"].lower())
+            unique.append(s)
+        if len(unique) >= 10:
+            break
+
+    return unique
 
 
 def get_icon(desc: str) -> str:
