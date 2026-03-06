@@ -1362,12 +1362,19 @@ class Handler(BaseHTTPRequestHandler):
 # ── Main ───────────────────────────────────────────────────────────────────────
 
 def run():
-    server = http.server.ThreadingHTTPServer((HOST, PORT), Handler)
+    import sys
+    print(f"  [startup] Python {sys.version}", flush=True)
+    print(f"  [startup] HOST={HOST!r}  PORT={PORT}", flush=True)
+    print(f"  [startup] PORT env var = {os.environ.get('PORT', '(not set)')}", flush=True)
+    print(f"  [startup] HOST env var = {os.environ.get('HOST', '(not set)')}", flush=True)
+    try:
+        server = http.server.ThreadingHTTPServer((HOST, PORT), Handler)
+    except Exception as e:
+        print(f"  [ERROR] Could not bind to {HOST}:{PORT} — {e}", flush=True)
+        raise
     url = f"http://{HOST}:{PORT}"
-    print(f"\n  🍝  Meatball Weather Deluxe is simmering at {url}")
-    print(f"  🍖  Default city: {DEFAULT_CITY}")
-    print(f"  🥚  Psst: try typing 'meatball' as a city")
-    print(f"  ✋  Press Ctrl+C to stop\n")
+    print(f"\n  🍝  Meatball is simmering at {url}", flush=True)
+    print(f"  🍖  Default city: {DEFAULT_CITY}", flush=True)
     if _HAS_BROWSER and HOST == "127.0.0.1":
         threading.Timer(0.5, lambda: webbrowser.open(url)).start()
     try:
