@@ -10,38 +10,13 @@ import json
 import sys
 import threading
 import urllib.parse
-import urllib.request
 import webbrowser
 from http.server import BaseHTTPRequestHandler
 
+from weather_dashboard import fetch_weather
+
 PORT = 7878
 DEFAULT_CITY = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "Amsterdam"
-
-
-# ── Weather fetch ──────────────────────────────────────────────────────────────
-
-def fetch_weather(city: str) -> dict:
-    try:
-        url = f"https://wttr.in/{urllib.parse.quote(city)}?format=j1"
-        with urllib.request.urlopen(url, timeout=8) as r:
-            data = json.loads(r.read())
-        current = data["current_condition"][0]
-        area = data["nearest_area"][0]
-        return {
-            "city":         area["areaName"][0]["value"],
-            "country":      area["country"][0]["value"],
-            "temp_c":       int(current["temp_C"]),
-            "temp_f":       int(current["temp_F"]),
-            "feels_like_c": int(current["FeelsLikeC"]),
-            "humidity":     int(current["humidity"]),
-            "wind_kmph":    int(current["windspeedKmph"]),
-            "wind_dir":     current["winddir16Point"],
-            "desc":         current["weatherDesc"][0]["value"],
-            "visibility":   int(current["visibility"]),
-            "uv_index":     int(current["uvIndex"]),
-        }
-    except Exception as e:
-        return {"error": str(e)}
 
 
 # ── HTML page ──────────────────────────────────────────────────────────────────
