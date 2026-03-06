@@ -35,28 +35,41 @@ WEATHER_ICONS = {
 
 
 def fetch_weather(city: str) -> dict:
-    """Fetch current weather from wttr.in (free, no API key needed)."""
-    try:
-        url = f"https://wttr.in/{urllib.parse.quote(city)}?format=j1"
-        with urllib.request.urlopen(url, timeout=5) as r:
-            data = json.loads(r.read())
-        current = data["current_condition"][0]
-        area    = data["nearest_area"][0]
-        return {
-            "city":         area["areaName"][0]["value"],
-            "country":      area["country"][0]["value"],
-            "temp_c":       int(current["temp_C"]),
-            "temp_f":       int(current["temp_F"]),
-            "feels_like_c": int(current["FeelsLikeC"]),
-            "humidity":     int(current["humidity"]),
-            "wind_kmph":    int(current["windspeedKmph"]),
-            "wind_dir":     current["winddir16Point"],
-            "desc":         current["weatherDesc"][0]["value"],
-            "visibility":   int(current["visibility"]),
-            "uv_index":     int(current["uvIndex"]),
-        }
-    except Exception as e:
-        return {"error": str(e)}
+    """Fetch current weather from wttr.in (free, no API key needed).
+
+    Tries HTTPS first; falls back to HTTP if SSL handshake fails.
+    Retries up to 3 times with increasing timeouts.
+    """
+    encoded = urllib.parse.quote(city)
+    attempts = [
+        (f"https://wttr.in/{encoded}?format=j1", 15),
+        (f"https://wttr.in/{encoded}?format=j1", 20),
+        (f"http://wttr.in/{encoded}?format=j1",  20),   # HTTP fallback
+    ]
+    last_error = "unknown error"
+    for url, timeout in attempts:
+        try:
+            with urllib.request.urlopen(url, timeout=timeout) as r:
+                data = json.loads(r.read())
+            current = data["current_condition"][0]
+            area    = data["nearest_area"][0]
+            return {
+                "city":         area["areaName"][0]["value"],
+                "country":      area["country"][0]["value"],
+                "temp_c":       int(current["temp_C"]),
+                "temp_f":       int(current["temp_F"]),
+                "feels_like_c": int(current["FeelsLikeC"]),
+                "humidity":     int(current["humidity"]),
+                "wind_kmph":    int(current["windspeedKmph"]),
+                "wind_dir":     current["winddir16Point"],
+                "desc":         current["weatherDesc"][0]["value"],
+                "visibility":   int(current["visibility"]),
+                "uv_index":     int(current["uvIndex"]),
+            }
+        except Exception as e:
+            last_error = str(e)
+            continue
+    return {"error": last_error}
 
 
 def get_icon(desc: str) -> str:
