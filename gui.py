@@ -16,6 +16,7 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler
 
 from weather_dashboard import fetch_weather, fetch_meatball_spots
+import lunch_agent
 
 PORT = 7878
 DEFAULT_CITY = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "Amsterdam"
@@ -90,6 +91,363 @@ def card_colors(temp_c: int) -> tuple[str, str]:
     elif temp_c >= 5:  return "#1A2C3A", "#5B9BD5"   # cool blue
     else:              return "#1A1A3A", "#9B8FD5"   # freezing purple
 
+
+LUNCH_HTML = """<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🥙 Meatball Lunch Agent</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+  :root {
+    --bg:     #1A2A1A; --bg-card: #243524; --green: #4CAF50;
+    --lime:   #8BC34A; --yellow: #FFC107; --red: #F44336;
+    --cream:  #F5F0E8; --muted:  #8A9E8A; --border: #3A5A3A;
+    --sauce:  #C0392B; --cheese: #F5CBA7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--cream);
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    min-height: 100vh; padding-bottom: 40px;
+  }
+  header {
+    background: #2D4A2D; border-bottom: 2px solid var(--green);
+    padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+  }
+  header h1 { font-size: 1.5rem; color: var(--lime); }
+  header p  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .nav-link {
+    margin-left: auto; color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 4px; transition: color .2s;
+  }
+  .nav-link:hover { color: var(--lime); border-color: var(--lime); }
+
+  .grid {
+    display: grid; gap: 14px; padding: 14px 16px;
+    max-width: 960px; margin: 0 auto;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .card-header {
+    background: #2D4A2D; padding: 10px 14px;
+    font-size: 0.9rem; font-weight: bold; color: var(--lime);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-body { padding: 14px; }
+
+  /* Luncher counter */
+  .luncher-display {
+    text-align: center; font-size: 3rem; font-weight: bold;
+    color: var(--lime); margin: 10px 0 4px;
+  }
+  .luncher-sub { text-align: center; font-size: 0.78rem; color: var(--muted); margin-bottom: 14px; }
+  .btn-row { display: flex; gap: 8px; justify-content: center; }
+  .btn {
+    background: #2D4A2D; border: 1px solid var(--border); border-radius: 4px;
+    color: var(--cream); cursor: pointer; font-family: inherit;
+    font-size: 0.9rem; padding: 8px 14px; transition: background .15s;
+  }
+  .btn:hover { background: var(--green); color: #000; }
+  .btn.primary { background: var(--green); color: #000; font-weight: bold; }
+  .btn.primary:hover { background: var(--lime); }
+  .btn.danger { background: var(--sauce); color: var(--cream); }
+  .btn.danger:hover { background: #e74c3c; }
+
+  /* Budget */
+  .budget-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; }
+  .budget-bar-bg {
+    width: 100%; height: 12px; background: #1A2A1A;
+    border-radius: 6px; overflow: hidden; margin-bottom: 8px;
+  }
+  .budget-bar { height: 100%; border-radius: 6px; transition: width .4s; }
+  .savings-box {
+    background: #1A2A1A; border-radius: 4px; padding: 8px 10px;
+    font-size: 0.82rem; margin-top: 8px;
+  }
+
+  /* Inventory */
+  .inv-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .inv-item:last-child { border-bottom: none; }
+  .inv-emoji { font-size: 1.2rem; width: 28px; text-align: center; }
+  .inv-name  { flex: 1; }
+  .inv-qty   { font-weight: bold; min-width: 40px; text-align: right; }
+  .inv-unit  { color: var(--muted); font-size: 0.75rem; min-width: 28px; }
+  .inv-low   { color: var(--red); }
+  .inv-ok    { color: var(--green); }
+
+  /* Suggestion */
+  .suggestion-dish { font-size: 1.6rem; font-weight: bold; color: var(--lime); margin: 8px 0 4px; }
+  .suggestion-meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
+  .vote-count { font-size: 0.8rem; color: var(--yellow); margin-top: 6px; }
+
+  /* Training */
+  .tip-card {
+    background: #1A2A1A; border-radius: 6px; padding: 10px 12px;
+    margin-bottom: 8px; cursor: pointer; transition: background .15s;
+  }
+  .tip-card:hover { background: #243524; }
+  .tip-card .tip-emoji { font-size: 1.3rem; margin-right: 8px; }
+  .tip-card .tip-text  { font-size: 0.83rem; color: var(--cream); }
+  .score-box { text-align: center; font-size: 1.8rem; font-weight: bold; color: var(--yellow); margin-bottom: 12px; }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 20px; right: 20px;
+    background: var(--green); color: #000;
+    padding: 10px 16px; border-radius: 6px;
+    font-size: 0.85rem; font-family: inherit;
+    display: none; z-index: 999; max-width: 300px;
+  }
+
+  .status-msg { font-size: 0.78rem; color: var(--lime); margin-top: 8px; min-height: 18px; }
+  .week-badge {
+    font-size: 0.7rem; color: var(--muted); background: #1A2A1A;
+    padding: 2px 6px; border-radius: 3px; margin-left: auto;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🥙 Meatball Lunch Agent</h1>
+    <p>Super Modern Lunch Dashboard voor de Lunch</p>
+  </div>
+  <a class="nav-link" href="/">← Terug naar weer</a>
+</header>
+
+<div class="grid">
+
+  <!-- Luncher Counter -->
+  <div class="card">
+    <div class="card-header">👥 Aantal Lunchers <span class="week-badge" id="weekBadge">week --</span></div>
+    <div class="card-body">
+      <div class="luncher-display" id="luncherCount">--</div>
+      <div class="luncher-sub">mensen eten vandaag mee</div>
+      <div class="btn-row">
+        <button class="btn" onclick="changeLunchers(-5)">−5</button>
+        <button class="btn" onclick="changeLunchers(-1)">−1</button>
+        <button class="btn" onclick="changeLunchers(+1)">+1</button>
+        <button class="btn" onclick="changeLunchers(+5)">+5</button>
+      </div>
+      <div class="status-msg" id="luncherMsg"></div>
+    </div>
+  </div>
+
+  <!-- Weekly Suggestion -->
+  <div class="card">
+    <div class="card-header">💡 Wekelijkse Suggestie</div>
+    <div class="card-body">
+      <div class="suggestion-dish" id="suggEmoji">🍝</div>
+      <div class="suggestion-dish" id="suggDish">Laden…</div>
+      <div class="suggestion-meta">⏱️ <span id="suggPrep">--</span> bereidingstijd</div>
+      <button class="btn primary" onclick="voteSuggestion()">👍 Stem op dit gerecht</button>
+      <div class="vote-count" id="voteCount">-- stemmen deze week</div>
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div class="card">
+    <div class="card-header">💶 Budget & Spaarplan</div>
+    <div class="card-body">
+      <div class="budget-row">
+        <span>Uitgegeven</span><span id="budgetSpent">€--</span>
+      </div>
+      <div class="budget-row">
+        <span>Budget cap</span><span id="budgetCap">€--</span>
+      </div>
+      <div class="budget-bar-bg">
+        <div class="budget-bar" id="budgetBar" style="width:0%"></div>
+      </div>
+      <div class="budget-row" style="font-weight:bold">
+        <span>Resterend</span><span id="budgetRem">€--</span>
+      </div>
+      <div class="savings-box">
+        🫙 Spaarplan (sauzen/uitjes): <strong id="savingsPot">€--</strong><br>
+        <span style="font-size:0.75rem;color:var(--muted)">Reservering voor sauzen, uitjes, ect.</span>
+      </div>
+      <div class="status-msg" id="budgetStatus"></div>
+    </div>
+  </div>
+
+  <!-- Inventory -->
+  <div class="card" style="grid-column: span 1;">
+    <div class="card-header">📦 Voorraad Overzicht</div>
+    <div class="card-body">
+      <div id="inventoryList">Laden…</div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" onclick="scanInventory()">📸 Scan voorraadla</button>
+        <button class="btn danger"  onclick="orderPicnic()">🛒 Bestel via Picnic</button>
+      </div>
+      <div class="status-msg" id="invMsg"></div>
+    </div>
+  </div>
+
+  <!-- Order History -->
+  <div class="card">
+    <div class="card-header">🛒 Picnic Bestellingen</div>
+    <div class="card-body">
+      <div id="orderHistory" style="font-size:0.82rem;color:var(--muted)">Geen bestellingen</div>
+    </div>
+  </div>
+
+  <!-- Training Tool -->
+  <div class="card">
+    <div class="card-header">🎓 Training Tool</div>
+    <div class="card-body">
+      <div class="score-box">⭐ <span id="trainingScore">0</span> pts</div>
+      <div id="trainingTips">Laden…</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+let state = {};
+
+function toast(msg, color) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.style.background = color || "var(--green)";
+  el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 3000);
+}
+
+async function loadState() {
+  const r = await fetch("/lunch/state");
+  state = await r.json();
+  render();
+}
+
+function render() {
+  // Luncher
+  document.getElementById("luncherCount").textContent = state.lunchers;
+  document.getElementById("weekBadge").textContent    = "week " + state.week;
+
+  // Suggestion
+  const s = state.suggestion;
+  document.getElementById("suggEmoji").textContent = s.emoji;
+  document.getElementById("suggDish").textContent  = s.dish;
+  document.getElementById("suggPrep").textContent  = s.prep;
+  document.getElementById("voteCount").textContent = s.votes + " stemmen deze week";
+
+  // Budget
+  const b = state.budget;
+  document.getElementById("budgetSpent").textContent = "€" + b.spent.toFixed(2);
+  document.getElementById("budgetCap").textContent   = "€" + b.cap.toFixed(2);
+  document.getElementById("budgetRem").textContent   = "€" + b.remaining.toFixed(2);
+  document.getElementById("savingsPot").textContent  = "€" + b.savings.toFixed(2);
+  document.getElementById("budgetStatus").textContent = b.status;
+  const bar = document.getElementById("budgetBar");
+  bar.style.width = Math.min(b.pct_used, 100) + "%";
+  bar.style.background = b.pct_used >= 80 ? "var(--red)" : b.pct_used >= 60 ? "var(--yellow)" : "var(--green)";
+
+  // Inventory
+  const inv = document.getElementById("inventoryList");
+  inv.innerHTML = state.inventory.map(i => {
+    const low = i.qty < i.min;
+    return `<div class="inv-item">
+      <span class="inv-emoji">${i.emoji}</span>
+      <span class="inv-name">${i.name}</span>
+      <span class="inv-qty ${low ? 'inv-low' : 'inv-ok'}">${i.qty}</span>
+      <span class="inv-unit">${i.unit}</span>
+      ${low ? '<span style="color:var(--red);font-size:0.7rem">⚠️ laag</span>' : ''}
+    </div>`;
+  }).join("");
+
+  // Order history
+  const oh = document.getElementById("orderHistory");
+  if (state.order_history.length === 0) {
+    oh.textContent = "Geen bestellingen";
+  } else {
+    oh.innerHTML = state.order_history.slice().reverse().map(o =>
+      `<div style="padding:4px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--lime)">${o.time}</span> — ${o.items.join(", ")}
+        <span style="color:var(--yellow);float:right">€${o.cost.toFixed(2)}</span>
+       </div>`
+    ).join("");
+  }
+
+  // Training
+  document.getElementById("trainingScore").textContent = state.training_score;
+  const tips = document.getElementById("trainingTips");
+  tips.innerHTML = state.training_tips.map(t =>
+    `<div class="tip-card" onclick="markTip(${t.id})">
+      <span class="tip-emoji">${t.emoji}</span>
+      <span class="tip-text">${t.tip}</span>
+     </div>`
+  ).join("");
+}
+
+async function changeLunchers(delta) {
+  const n = (state.lunchers || 0) + delta;
+  const r = await fetch("/lunch/lunchers?n=" + n);
+  const d = await r.json();
+  state.lunchers = d.lunchers;
+  document.getElementById("luncherCount").textContent = d.lunchers;
+  document.getElementById("luncherMsg").textContent = "👥 Bijgewerkt naar " + d.lunchers + " lunchers";
+  setTimeout(() => document.getElementById("luncherMsg").textContent = "", 2000);
+}
+
+async function voteSuggestion() {
+  const dish = state.suggestion.dish;
+  const r = await fetch("/lunch/vote?dish=" + encodeURIComponent(dish));
+  const d = await r.json();
+  state.suggestion.votes = d.votes;
+  document.getElementById("voteCount").textContent = d.votes + " stemmen deze week";
+  toast("👍 Stem uitgebracht op " + dish + "!");
+}
+
+async function scanInventory() {
+  document.getElementById("invMsg").textContent = "📸 Scanning…";
+  const r = await fetch("/lunch/scan");
+  const d = await r.json();
+  state.inventory = d.inventory;
+  render();
+  document.getElementById("invMsg").textContent = d.message;
+  toast(d.message);
+  setTimeout(() => document.getElementById("invMsg").textContent = "", 3000);
+}
+
+async function orderPicnic() {
+  document.getElementById("invMsg").textContent = "🛒 Bestelling plaatsen…";
+  const r = await fetch("/lunch/order");
+  const d = await r.json();
+  if (d.ok) {
+    toast(d.message, "var(--sauce)");
+    await loadState();
+  } else {
+    toast("✅ " + d.message, "var(--green)");
+  }
+  document.getElementById("invMsg").textContent = d.message;
+  setTimeout(() => document.getElementById("invMsg").textContent = "", 4000);
+}
+
+async function markTip(tipId) {
+  const r = await fetch("/lunch/training?tip_id=" + tipId);
+  const d = await r.json();
+  document.getElementById("trainingScore").textContent = d.score;
+  toast("🎓 " + d.message);
+}
+
+loadState();
+setInterval(loadState, 30000);
+</script>
+</body>
+</html>
+"""
 
 EASTER_EGG_HTML = """
 <div style="text-align:center;padding:40px 20px">
@@ -282,7 +640,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <header>
   <h1>🍝 MEATBALL WEATHER DELUXE 🍝</h1>
   <p>Serving forecasts since the dawn of pasta</p>
-  <div class="counter" id="counter">0 meatballs served this session</div>
+  <div class="counter" id="counter">0 meatballs served this session &nbsp;·&nbsp; <a href="/lunch" style="color:var(--cheese);text-decoration:none">🥙 Lunch Dashboard →</a></div>
 </header>
 
 <div class="wisdom" id="wisdom">__WISDOM__</div>
@@ -502,6 +860,70 @@ class Handler(BaseHTTPRequestHandler):
                 })
 
             body = json.dumps(data).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch":
+            page = LUNCH_HTML.encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(page)))
+            self.end_headers()
+            self.wfile.write(page)
+
+        elif parsed.path == "/lunch/state":
+            body = json.dumps(lunch_agent.snapshot()).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/lunchers":
+            params = urllib.parse.parse_qs(parsed.query)
+            n      = int(params.get("n", [lunch_agent._luncher_count])[0])
+            body   = json.dumps(lunch_agent.set_lunchers(n)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/vote":
+            params = urllib.parse.parse_qs(parsed.query)
+            dish   = params.get("dish", [""])[0]
+            body   = json.dumps(lunch_agent.vote_suggestion(dish)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/scan":
+            body = json.dumps(lunch_agent.scan_inventory()).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/order":
+            params = urllib.parse.parse_qs(parsed.query)
+            items  = params.get("items", [])
+            body   = json.dumps(lunch_agent.order_picnic(items)).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+
+        elif parsed.path == "/lunch/training":
+            params = urllib.parse.parse_qs(parsed.query)
+            tip_id = int(params.get("tip_id", [1])[0])
+            body   = json.dumps(lunch_agent.answer_training(tip_id)).encode()
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
